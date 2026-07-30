@@ -1,0 +1,69 @@
+project:
+  type: book
+  output-dir: docs
+  resources:
+    - assets/python-logo.svg
+
+
+book:
+  title: "Analitika Perkotaan"
+  subtitle: "Semester Ganjil Tahun Akademik 2026/2027"
+  output-file: "modul-praktikum-analitika-perkotaan"
+  author:
+    - "Prof. Ibnu Syabri, B.Sc., M.Sc., Ph.D"
+    - "Muhammad Abdul Mubdi Bindar, S.T., M.T."
+    - "Ahmad Luky Ramdani, S.Komp., M.Kom."
+    - "Valendya Rilansari, S.P.W.K., M.P.W.K."
+    - "Chania Rahmah, S.P.W.K., M.Sc."
+  date: "2026-07-15"
+  chapters:
+    - index.qmd
+    - modul-01.ipynb
+    - modul-02.ipynb
+    - modul-03.ipynb
+    - modul-04.ipynb
+    - modul-05.ipynb
+
+lang: id
+
+language:
+  toc-title-document: "Daftar Isi"
+  callout-note-title: "Catatan"
+  callout-tip-title: "Kiat"
+  callout-warning-title: "Perhatian"
+  callout-important-title: "Penting"
+  callout-caution-title: "Hati-hati"
+  section-title-footnotes: "Catatan Kaki"
+  crossref-ch-prefix: "Modul"
+
+crossref:
+  chapters: true
+
+format:
+  html:
+    theme:
+      - cosmo
+      - styles.scss
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-copy: true
+    link-external-newwindow: true
+  typst:
+    papersize: a4
+    page-numbering: "1"
+    callout-icon: true
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    mainfont: "Carlito"
+    sansfont: "Playfair Display"
+    monofont: "JetBrains Mono"
+    font-paths:
+      - .quarto/typst/fonts/
+      - assets/fonts/
+    template-partials:
+      - typst/typst-template.typ
+      - typst/typst-show.typ
+      - typst/page.typ
+    keep-typ: true

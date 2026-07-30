@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="id" xml:lang="id"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>5&nbsp; Visualisasi Data dengan Matplotlib dan Seaborn – Analitika Perkotaan</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./modul-04.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7fde21fbbed941212ff23fc867eda995.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-4b3ae02ca3d2c990793b4a58c5ee5acf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7fde21fbbed941212ff23fc867eda995.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-434d7e7f46c20ea3b5dec979eeaa14b2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-434d7e7f46c20ea3b5dec979eeaa14b2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-434d7e7f46c20ea3b5dec979eeaa14b2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Tidak ada hasil",
+    "search-matching-documents-text": "dokumen cocok",
+    "search-copy-link-title": "Salin tautan untuk mencari",
+    "search-hide-matches-text": "Sembunyikan kecocokan lainnya",
+    "search-more-match-text": "kecocokan lainnya di dokumen ini",
+    "search-more-matches-text": "kecocokan lainnya di dokumen ini",
+    "search-clear-button-title": "Hapus",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Batal",
+    "search-submit-button-title": "Kirim",
+    "search-label": "Mencari"
+  }
+}</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alihkan bilah sisi" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./modul-05.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Visualisasi Data dengan Matplotlib dan Seaborn</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alihkan bilah sisi" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Mencari" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Analitika Perkotaan</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Mencari"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kata Pengantar</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Fondasi Lingkungan Kerja: Python <em>Offline</em>, Terminal, dan Direktori Proyek</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan Pandas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan SQL (SQLite)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title"><em>Exploratory Data Analysis</em> (EDA)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-05.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Visualisasi Data dengan Matplotlib dan Seaborn</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Daftar Isi</h2>
+   
+  <ul>
+  <li><a href="#pendahuluan" id="toc-pendahuluan" class="nav-link active" data-scroll-target="#pendahuluan"><span class="header-section-number">5.1</span> Pendahuluan</a></li>
+  <li><a href="#gambaran-umum-kasus" id="toc-gambaran-umum-kasus" class="nav-link" data-scroll-target="#gambaran-umum-kasus"><span class="header-section-number">5.2</span> Gambaran Umum Kasus</a></li>
+  <li><a href="#instruksi" id="toc-instruksi" class="nav-link" data-scroll-target="#instruksi"><span class="header-section-number">5.3</span> Instruksi</a>
+  <ul class="collapse">
+  <li><a href="#prinsip-visualisasi-memilih-grafik-sesuai-pertanyaan-perencanaan" id="toc-prinsip-visualisasi-memilih-grafik-sesuai-pertanyaan-perencanaan" class="nav-link" data-scroll-target="#prinsip-visualisasi-memilih-grafik-sesuai-pertanyaan-perencanaan"><span class="header-section-number">5.3.1</span> Prinsip Visualisasi: Memilih Grafik Sesuai Pertanyaan Perencanaan</a></li>
+  <li><a href="#persiapan-data-dan-impor-pustaka" id="toc-persiapan-data-dan-impor-pustaka" class="nav-link" data-scroll-target="#persiapan-data-dan-impor-pustaka"><span class="header-section-number">5.3.2</span> Persiapan Data dan Impor Pustaka</a></li>
+  <li><a href="#diagram-batang-membandingkan-fasilitas-antar-kecamatan" id="toc-diagram-batang-membandingkan-fasilitas-antar-kecamatan" class="nav-link" data-scroll-target="#diagram-batang-membandingkan-fasilitas-antar-kecamatan"><span class="header-section-number">5.3.3</span> Diagram Batang: Membandingkan Fasilitas Antar-Kecamatan</a></li>
+  <li><a href="#scatter-plot-menelusuri-hubungan-kepadatan-dan-fasilitas" id="toc-scatter-plot-menelusuri-hubungan-kepadatan-dan-fasilitas" class="nav-link" data-scroll-target="#scatter-plot-menelusuri-hubungan-kepadatan-dan-fasilitas"><span class="header-section-number">5.3.4</span> Scatter Plot: Menelusuri Hubungan Kepadatan dan Fasilitas</a></li>
+  <li><a href="#histogram-density-plot-dan-box-plot-membaca-distribusi-kepadatan-penduduk-kota" id="toc-histogram-density-plot-dan-box-plot-membaca-distribusi-kepadatan-penduduk-kota" class="nav-link" data-scroll-target="#histogram-density-plot-dan-box-plot-membaca-distribusi-kepadatan-penduduk-kota"><span class="header-section-number">5.3.5</span> Histogram, Density Plot, dan Box Plot: Membaca Distribusi Kepadatan Penduduk Kota</a></li>
+  <li><a href="#estetika-visual-menambahkan-judul-label-legenda-dan-warna-harmonis" id="toc-estetika-visual-menambahkan-judul-label-legenda-dan-warna-harmonis" class="nav-link" data-scroll-target="#estetika-visual-menambahkan-judul-label-legenda-dan-warna-harmonis"><span class="header-section-number">5.3.6</span> Estetika Visual: Menambahkan Judul, Label, Legenda, dan Warna Harmonis</a></li>
+  <li><a href="#storytelling-menuliskan-interpretasi-naratif-di-bawah-grafik" id="toc-storytelling-menuliskan-interpretasi-naratif-di-bawah-grafik" class="nav-link" data-scroll-target="#storytelling-menuliskan-interpretasi-naratif-di-bawah-grafik"><span class="header-section-number">5.3.7</span> Storytelling: Menuliskan Interpretasi Naratif di Bawah Grafik</a></li>
+  </ul></li>
+  <li><a href="#latihan-mandiri" id="toc-latihan-mandiri" class="nav-link" data-scroll-target="#latihan-mandiri"><span class="header-section-number">5.4</span> Latihan Mandiri</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-modul-5" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Visualisasi Data dengan Matplotlib dan Seaborn</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-important callout-titled" title="Sub-CPMK Pertemuan Ini">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Penting</span>Sub-CPMK Pertemuan Ini
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mahasiswa mampu merumuskan visualisasi data perkotaan yang informatif menggunakan Matplotlib dan Seaborn, memilih jenis grafik yang tepat sesuai karakteristik data, menerapkan estetika grafik, dan menyusun interpretasi naratif atas visualisasi tersebut.</p>
+</div>
+</div>
+<section id="pendahuluan" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="pendahuluan"><span class="header-section-number">5.1</span> Pendahuluan</h2>
+<p><span class="teks-placeholder" style="color: #8a8a8a;">&lt;masukkan narasi yang menceritakan ‘big why’ mempelajari visualisasi data dengan Matplotlib dan Seaborn di sini&gt;</span></p>
+</section>
+<section id="gambaran-umum-kasus" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="gambaran-umum-kasus"><span class="header-section-number">5.2</span> Gambaran Umum Kasus</h2>
+<p>Sebagai peserta studio perencanaan wilayah dan kota, Anda tentu akrab dengan laporan kompilasi data. Angka-angka di tabel profil kelurahan Bandar Lampung yang kita olah sebelumnya sangat sulit dibaca secara langsung oleh pengambil keputusan jika hanya disajikan dalam bentuk tabel baris-kolom yang kaku. Di sinilah visualisasi data berperan penting. Grafik yang dirancang dengan baik tidak hanya mempercepat pemahaman, tetapi juga meminimalisir kesalahan interpretasi kebijakan pembangunan kota.</p>
+<p>Bayangkan visualisasi data sebagai proses menggambar grafik presentasi untuk sidang studio perencanaan. Jika grafik kita tidak memiliki judul yang jelas, label sumbunya terpotong, warnanya saling bertabrakan, atau legendanya hilang, asisten studio atau dosen pembimbing pasti akan langsung memberikan coretan revisi berwarna merah pada kertas gambar kita. Di modul ini, kita akan mempelajari prinsip dasar visualisasi yang baik dan mempraktikkannya untuk memvisualisasikan profil fasilitas pendidikan dan kepadatan penduduk Kota Bandar Lampung menggunakan pustaka Matplotlib dan Seaborn.</p>
+</section>
+<section id="instruksi" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="instruksi"><span class="header-section-number">5.3</span> Instruksi</h2>
+<p>Buat notebook baru <code>modul/modul-05.ipynb</code> di direktori proyek Anda, sambungkan ke <em>kernel</em> <code>analitika-perkotaan</code>, dan kerjakan seluruh instruksi di dalamnya.</p>
+<section id="prinsip-visualisasi-memilih-grafik-sesuai-pertanyaan-perencanaan" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="prinsip-visualisasi-memilih-grafik-sesuai-pertanyaan-perencanaan"><span class="header-section-number">5.3.1</span> Prinsip Visualisasi: Memilih Grafik Sesuai Pertanyaan Perencanaan</h3>
+<p>Sebelum mulai memprogram, pahami terlebih dahulu kerangka pikir visualisasi data yang dirancang untuk kebutuhan analisis dan presentasi laporan studio:</p>
+<ul>
+<li><strong>Tiga Prinsip Schwabish</strong>:
+<ul>
+<li><em>Tunjukkan Data</em>: Pastikan perhatian pembaca tertuju langsung pada informasi utama grafik.</li>
+<li><em>Kurangi Kekacauan (Reduce Clutter)</em>: Bersihkan elemen dekoratif non-data yang mengganggu kognisi (seperti efek 3D, bayangan, atau garis kisi-kisi latar belakang yang terlalu tebal).</li>
+<li><em>Integrasikan Teks</em>: Tempatkan label atau legenda sedekat mungkin dengan data untuk mengurangi beban kognitif pembaca.</li>
+</ul></li>
+<li><strong>Taksonomi Data</strong>:
+<ul>
+<li><em>Kuantitatif (Numerik)</em>: Data yang dapat dihitung atau diukur (misalnya kepadatan penduduk atau jumlah sekolah). Data ini bisa berupa <em>diskrit</em> (bulat, seperti jumlah sekolah) atau <em>kontinu</em> (desimal, seperti luas wilayah).</li>
+<li><em>Kategorikal (Kualitatif)</em>: Data pengelompokkan (seperti nama kecamatan atau jenis topografi). Data ini bisa berupa <em>nominal</em> (tanpa urutan, seperti jenis lapangan usaha) atau <em>ordinal</em> (memiliki tingkatan/urutan, seperti tingkat kepuasan layanan).</li>
+<li><strong>Analisis “So What?”</strong>: Jangan pernah menggunakan grafik garis (<em>line chart</em>) bersambung untuk data yang bersifat diskrit antarkategori (misalnya jumlah sekolah per kelurahan). Garis yang terhubung secara implisit menunjukkan adanya nilai antara di sepanjang garis tersebut, padahal di lapangan tidak ada nilai transisi antar-kelurahan. Ini adalah kesalahan visualisasi yang fatal.</li>
+</ul></li>
+<li><strong>Pohon Keputusan Pemilihan Grafik</strong>: Berikut adalah panduan sederhana memilih grafik yang sesuai dengan tujuan analisis Anda:</li>
+</ul>
+<div class="cell" data-fig-width="6" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A["Tujuan Visualisasi"] --&gt; B{"Pilih Berdasarkan Kebutuhan"}
+    B --&gt; C["Perbandingan"] --&gt; C1["Diagram Batang (Item)&lt;br&gt;Grafik Garis (Waktu)"]
+    B --&gt; D["Komposisi"] --&gt; D1["Pie Chart (Sederhana)&lt;br&gt;Stacked Bar (Kompleks)"]
+    B --&gt; E["Distribusi"] --&gt; E1["Histogram (Frekuensi)&lt;br&gt;Box Plot (Statistik)"]
+    B --&gt; F["Hubungan"] --&gt; F1["Scatter Plot (2 Variabel)"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Catatan</em>: Diagram di atas membantu kita mencocokkan pertanyaan perencanaan dengan jenis visual yang tepat secara instan.</p>
+</section>
+<section id="persiapan-data-dan-impor-pustaka" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="persiapan-data-dan-impor-pustaka"><span class="header-section-number">5.3.2</span> Persiapan Data dan Impor Pustaka</h3>
+<p>Seperti pada modul-modul sebelumnya, kita akan menggunakan basis data relasional SQLite <code>bdl.sqlite</code> yang berada di folder dataset sebagai sumber data utama. Impor pustaka yang diperlukan (<code>sqlite3</code>, <code>pandas</code>, <code>matplotlib.pyplot</code>, dan <code>seaborn</code>), buka koneksi basis data, lalu muat data gabungan kelurahan dan kecamatan menggunakan <code>LEFT JOIN</code> ke dalam DataFrame Pandas:</p>
+<div id="m5-cell-6" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-19T14:35:05.200408Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-19T14:35:05.200164Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-19T14:35:07.732603Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-19T14:35:07.731050Z&quot;}}" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sqlite3</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Buka koneksi basis data</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>path_db <span class="op">=</span> <span class="st">"../dataset-ganjil-2026-2027/bdl.sqlite"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>koneksi <span class="op">=</span> sqlite3.<span class="ex">connect</span>(path_db)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Ambil seluruh data kelurahan beserta nama kecamatan induknya</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>kueri <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT </span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">    kel.*, </span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="st">    kec.nama_kec </span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="st">FROM </span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="st">    kelurahan kel</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="st">LEFT JOIN </span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="st">    kecamatan kec ON kel.kode_kec = kec.kode_kec</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_sql(kueri, koneksi)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.shape)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(126, 34)</code></pre>
+</div>
+</div>
+</section>
+<section id="diagram-batang-membandingkan-fasilitas-antar-kecamatan" class="level3" data-number="5.3.3">
+<h3 data-number="5.3.3" class="anchored" data-anchor-id="diagram-batang-membandingkan-fasilitas-antar-kecamatan"><span class="header-section-number">5.3.3</span> Diagram Batang: Membandingkan Fasilitas Antar-Kecamatan</h3>
+<p>Pertanyaan pertama kita: <em>Kecamatan mana yang memiliki jumlah fasilitas taman kanak-kanak (TK) terbanyak?</em></p>
+<p>Untuk menjawab perbandingan kuantitas antar-item kategorikal (nama kecamatan), grafik batang adalah pilihan paling tepat. Kita perlu menghitung total TK (<code>jml_tk_negeri + jml_tk_swasta</code>) untuk setiap kelurahan terlebih dahulu, lalu mengelompokkannya (<em>group by</em>) berdasarkan nama kecamatan, dan mengurutkannya dari yang terbanyak.</p>
+<div id="m5-cell-8" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-19T14:35:07.736156Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-19T14:35:07.735543Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-19T14:35:08.477536Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-19T14:35:08.476311Z&quot;}}" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hitung total TK di setiap kelurahan</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"total_tk"</span>] <span class="op">=</span> df[<span class="st">"jml_tk_negeri"</span>] <span class="op">+</span> df[<span class="st">"jml_tk_swasta"</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Agregasikan total TK per kecamatan</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>tk_per_kec <span class="op">=</span> df.groupby(<span class="st">"nama_kec"</span>)[<span class="st">"total_tk"</span>].<span class="bu">sum</span>().reset_index()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>tk_per_kec <span class="op">=</span> tk_per_kec.sort_values(by<span class="op">=</span><span class="st">"total_tk"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Mulai membuat plot</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>sns.barplot(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>tk_per_kec,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"total_tk"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"nama_kec"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"nama_kec"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span><span class="st">"viridis"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Jumlah Taman Kanak-Kanak (TK)"</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Kecamatan"</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="modul-05_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled" title="Penting!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Penting!
+</div>
+</div>
+<section id="etika-dan-batas-sumbu-y-pada-grafik-batang" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="etika-dan-batas-sumbu-y-pada-grafik-batang">Etika dan Batas Sumbu Y pada Grafik Batang</h3>
+<p>Grafik batang menggunakan panjang visual untuk membandingkan kuantitas. Karena itu, sumbu kuantitas (dalam diagram batang horizontal di atas adalah sumbu X, sedangkan pada diagram batang vertikal adalah sumbu Y) <strong>wajib dimulai dari nol</strong>. Jika Anda memotong sumbu kuantitas di atas nol, perbedaan tinggi batang akan terlihat jauh lebih dramatis daripada aslinya, sehingga membohongi pembaca secara visual. Hal ini dikategorikan sebagai distorsi data yang tidak etis.</p>
+<p>Namun, untuk keperluan pembuktian teknis tertentu di mana Anda ingin mengatur batas sumbu secara manual (misalnya ingin menyoroti perbedaan yang sangat tipis pada grafik lain, atau memotong nilai dasar secara sengaja), Anda bisa menggunakan perintah limit pada sumbu: - Jika diagram batang vertikal atau sumbu Y: <code>plt.ylim(bottom=nilai_minimum)</code> atau <code>ax.set_ylim(bottom=nilai_minimum)</code>. - Jika diagram batang horizontal atau sumbu X: <code>plt.xlim(left=nilai_minimum)</code> atau <code>ax.set_xlim(left=nilai_minimum)</code>.</p>
+<p>Terapkan teknik ini dengan sangat hati-hati, sertakan label nilai angka yang jelas di atas batang, dan beri catatan penjelas pada grafik Anda agar tidak menimbulkan salah tafsir.</p>
+</section>
+</div>
+</section>
+<section id="scatter-plot-menelusuri-hubungan-kepadatan-dan-fasilitas" class="level3" data-number="5.3.4">
+<h3 data-number="5.3.4" class="anchored" data-anchor-id="scatter-plot-menelusuri-hubungan-kepadatan-dan-fasilitas"><span class="header-section-number">5.3.4</span> Scatter Plot: Menelusuri Hubungan Kepadatan dan Fasilitas</h3>
+<p>Pertanyaan kedua kita: <em>Apakah kelurahan yang semakin padat penduduknya memiliki jumlah fasilitas TK yang lebih banyak?</em></p>
+<p>Ini adalah pertanyaan hubungan (<em>relationship</em>) antara dua variabel numerik (<code>kepadatan_pddk</code> dan <code>total_tk</code>). Sesuai pohon keputusan, grafik sebar (<em>scatter plot</em>) adalah pilihan ideal untuk melihat sebaran titik amatan ini.</p>
+<div id="m5-cell-11" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-19T14:35:08.480254Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-19T14:35:08.480022Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-19T14:35:08.611867Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-19T14:35:08.610851Z&quot;}}" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">"kepadatan_pddk"</span>, y<span class="op">=</span><span class="st">"total_tk"</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">"teal"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Kepadatan Penduduk (jiwa/km²)"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Jumlah Taman Kanak-Kanak (TK)"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="modul-05_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Pengetahuan VS Code">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Kiat</span>Pengetahuan VS Code
+</div>
+</div>
+<section id="fitur-interactive-plot-viewer" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="fitur-interactive-plot-viewer">Fitur Interactive Plot Viewer</h3>
+<p>Ketika Anda menggunakan Visual Studio Code untuk menjalankan Jupyter Notebook, arahkan kursor mouse ke bagian grafik yang baru saja ter-render. Di sudut kanan atas gambar, VS Code secara otomatis menyediakan tombol ikon untuk mengaktifkan <em>Plot Viewer</em>. Dengan alat ini, Anda bisa memperbesar (<em>zoom</em>), menggeser area (<em>pan</em>), atau menyimpan file gambar secara langsung tanpa perlu mengetik kode tambahan di editor Anda.</p>
+</section>
+</div>
+</section>
+<section id="histogram-density-plot-dan-box-plot-membaca-distribusi-kepadatan-penduduk-kota" class="level3" data-number="5.3.5">
+<h3 data-number="5.3.5" class="anchored" data-anchor-id="histogram-density-plot-dan-box-plot-membaca-distribusi-kepadatan-penduduk-kota"><span class="header-section-number">5.3.5</span> Histogram, Density Plot, dan Box Plot: Membaca Distribusi Kepadatan Penduduk Kota</h3>
+<p>Pertanyaan ketiga kita: <em>Bagaimana sebaran kepadatan penduduk antarkelurahan di Bandar Lampung? Apakah mayoritas kelurahan memiliki kepadatan penduduk yang seragam, atau ada ketimpangan sebaran?</em></p>
+<p>Ini adalah pertanyaan seputar distribusi (<em>distribution</em>). Kita akan memadukan histogram (mengelompokkan nilai ke dalam tabung/bin) dengan kurva estimasi kepadatan kernel (<em>Kernel Density Estimate</em> atau KDE) untuk memvisualisasikan bentuk sebarannya:</p>
+<div id="m5-cell-14" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-19T14:35:08.615155Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-19T14:35:08.614841Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-19T14:35:08.787891Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-19T14:35:08.786289Z&quot;}}" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sns.histplot(df[<span class="st">"kepadatan_pddk"</span>], kde<span class="op">=</span><span class="va">True</span>, bins<span class="op">=</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">"purple"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Kepadatan Penduduk (jiwa/km²)"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Frekuensi Kelurahan"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="modul-05_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Selain histogram, pohon keputusan kita juga menyebut <em>box plot</em> sebagai grafik distribusi. Jika histogram menunjukkan bentuk sebaran, <em>box plot</em> meringkas sebaran itu menjadi lima angka statistik: nilai minimum, kuartil pertama, median, kuartil ketiga, dan nilai maksimum — sementara titik-titik di luar “pagar” adalah <em>outlier</em> yang sudah kita kenali di Modul 4. Keunggulan utamanya: <em>box plot</em> mudah dijajarkan antarkelompok kategorikal. Mari bandingkan sebaran kepadatan penduduk antarjenis topografi wilayah:</p>
+<div id="23f4c995" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>sns.boxplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">"kepadatan_pddk"</span>, y<span class="op">=</span><span class="st">"topo"</span>, color<span class="op">=</span><span class="st">"lightsteelblue"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Kepadatan Penduduk (jiwa/km²)"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Topografi Wilayah"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="modul-05_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="estetika-visual-menambahkan-judul-label-legenda-dan-warna-harmonis" class="level3" data-number="5.3.6">
+<h3 data-number="5.3.6" class="anchored" data-anchor-id="estetika-visual-menambahkan-judul-label-legenda-dan-warna-harmonis"><span class="header-section-number">5.3.6</span> Estetika Visual: Menambahkan Judul, Label, Legenda, dan Warna Harmonis</h3>
+<p>Grafik-grafik di atas secara teknis sudah benar, tetapi tampilannya masih sangat dasar. Untuk presentasi studio yang bernilai profesional, kita wajib menerapkan estetika visual: menambahkan judul yang deskriptif, memperjelas label sumbu, merapikan legenda, dan memoles tampilannya.</p>
+<p>Kita akan menyusun opsi pengaturan font dan warna di dalam variabel dictionary, lalu membongkarnya (<em>unpacking</em>) ke dalam perintah visualisasi untuk menjaga efisiensi penulisan kode:</p>
+<div id="m5-cell-16" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-19T14:35:08.791663Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-19T14:35:08.791250Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-19T14:35:09.089623Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-19T14:35:09.088152Z&quot;}}" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mengatur gaya estetika Seaborn</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>sns.set_theme(style<span class="op">=</span><span class="st">"whitegrid"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Membuat dictionary berisi opsi teks judul agar seragam dan rapi</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>opsi_judul <span class="op">=</span> {</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"fontsize"</span>: <span class="dv">14</span>, </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"fontweight"</span>: <span class="st">"bold"</span>, </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"color"</span>: <span class="st">"darkblue"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pad"</span>: <span class="dv">15</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>opsi_label <span class="op">=</span> {</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"fontsize"</span>: <span class="dv">11</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"color"</span>: <span class="st">"dimgray"</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Memulai penggambaran grafik yang sudah dipoles</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>df, </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"kepadatan_pddk"</span>, </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"total_tk"</span>, </span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"topo"</span>, </span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span><span class="st">"Set2"</span>, </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    s<span class="op">=</span><span class="dv">80</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Menerapkan dictionary opsi label ke elemen teks</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Hubungan Kepadatan Penduduk dan Jumlah TK Kelurahan"</span>, <span class="op">**</span>opsi_judul)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Kepadatan Penduduk (jiwa/km²)"</span>, <span class="op">**</span>opsi_label)</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Jumlah Taman Kanak-Kanak (TK)"</span>, <span class="op">**</span>opsi_label)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">"Topografi Wilayah"</span>, bbox_to_anchor<span class="op">=</span>(<span class="fl">1.05</span>, <span class="dv">1</span>), loc<span class="op">=</span><span class="st">'upper left'</span>)</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="modul-05_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Konsep Python">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Konsep Python
+</div>
+</div>
+<section id="dictionary-dan-dictionary-unpacking" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="dictionary-dan-dictionary-unpacking">Dictionary dan Dictionary Unpacking (<code>**</code>)</h3>
+<p><strong>Dictionary</strong> adalah tipe data koleksi pada Python yang menyimpan pasangan kunci (<em>key</em>) dan nilai (<em>value</em>). Berbeda dengan <em>list</em> yang diakses menggunakan indeks angka (0, 1, …), kamus ini diakses menggunakan kunci bertipe string atau tipe data tak-berubah lainnya.</p>
+<p>Contoh pendefinisian kamus:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>opsi_judul <span class="op">=</span> {<span class="st">"fontsize"</span>: <span class="dv">14</span>, <span class="st">"color"</span>: <span class="st">"darkblue"</span>}</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Untuk menggunakan nilai di dalamnya, kita bisa memanggil kuncinya: <code>opsi_judul["color"]</code>.</p>
+<p><strong>Dictionary Unpacking (<code>**</code>)</strong> adalah operator pembongkaran. Ketika kita memanggil fungsi dan meletakkan tanda bintang ganda (<code>**</code>) sebelum nama variabel dictionary, Python akan secara otomatis membongkar seluruh pasangan kunci-nilai tersebut dan meneruskannya sebagai argumen kata kunci (<em>keyword arguments</em>) ke dalam fungsi tersebut.</p>
+<p>Jadi, penulisan:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Judul"</span>, <span class="op">**</span>opsi_judul)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Secara instan diterjemahkan oleh interpreter Python menjadi:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Judul"</span>, fontsize<span class="op">=</span><span class="dv">14</span>, color<span class="op">=</span><span class="st">"darkblue"</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Teknik ini sangat berguna untuk membuat templat gaya teks yang bersih, konsisten, dan mudah diperbarui di satu baris tunggal, sehingga Anda tidak perlu mengetik argumen dekoratif berulang-ulang di setiap grafik.</p>
+</section>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Pengetahuan Komputer">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Pengetahuan Komputer
+</div>
+</div>
+<section id="konsep-dpi-dots-per-inch-untuk-ekspor-grafik" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="konsep-dpi-dots-per-inch-untuk-ekspor-grafik">Konsep DPI (Dots Per Inch) untuk Ekspor Grafik</h3>
+<p>Saat Anda menyusun laporan studio perencanaan, gambar visualisasi tidak cukup hanya tampil di layar komputer. Grafik tersebut harus diekspor sebagai file gambar statis untuk dimasukkan ke laporan akhir (Word/PDF) atau poster presentasi.</p>
+<p>Gunakan fungsi <code>plt.savefig()</code> untuk menyimpan grafik. Secara default, resolusi ekspor berkisar pada 72-96 DPI (<em>Dots Per Inch</em>), yang akan terlihat buram atau pecah ketika dicetak di atas kertas fisik. Untuk publikasi cetak yang tajam, biasakan mengekspor dengan resolusi minimal <strong>300 DPI</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Menyimpan file grafik dengan ketajaman tinggi untuk cetakan</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"hubungan_kepadatan_tk.png"</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Argumen <code>bbox_inches="tight"</code> memastikan agar tidak ada teks label atau legenda di pinggir grafik yang terpotong saat file gambar disimpan.</p>
+</section>
+</div>
+</section>
+<section id="storytelling-menuliskan-interpretasi-naratif-di-bawah-grafik" class="level3" data-number="5.3.7">
+<h3 data-number="5.3.7" class="anchored" data-anchor-id="storytelling-menuliskan-interpretasi-naratif-di-bawah-grafik"><span class="header-section-number">5.3.7</span> Storytelling: Menuliskan Interpretasi Naratif di Bawah Grafik</h3>
+<p>Membuat grafik hanyalah separuh tugas dari seorang analis perkotaan. Tugas terpenting berikutnya adalah menuliskan cerita di balik data (<em>storytelling</em>) dalam bentuk narasi pendek yang diletakkan tepat di bawah grafik. Narasi visual yang baik dalam studio perencanaan minimal menjawab tiga pertanyaan dasar: 1. <em>Pola umum apa yang terlihat secara jelas pada grafik?</em> 2. <em>Apakah ada anomali atau titik ekstrem yang menarik perhatian?</em> 3. <em>Apa rekomendasi awal atau implikasi kebijakan tata ruang dari temuan visual tersebut?</em></p>
+<p>Mari kita buat interpretasi singkat dari grafik hubungan kepadatan dan jumlah TK di atas:</p>
+<blockquote class="blockquote">
+<p><strong>Interpretasi Grafik:</strong> Grafik sebar di atas menunjukkan bahwa hubungan antara kepadatan penduduk kelurahan dan ketersediaan fasilitas TK di Kota Bandar Lampung tergolong lemah. Kelurahan-kelurahan dengan kepadatan penduduk yang sangat tinggi (di atas 20.000 jiwa/km²) ternyata tidak otomatis memiliki fasilitas TK yang melimpah; sebagian besar menumpuk di bawah 5 unit TK. Hal ini mengindikasikan adanya isu kesenjangan layanan pendidikan anak usia dini. Selain itu, sebaran warna topografi memperlihatkan bahwa wilayah dataran memiliki variasi fasilitas yang lebih luas dibandingkan dengan wilayah lembah/aliran sungai yang cenderung terbatas. Pemerintah Kota disarankan memprioritaskan bantuan penyediaan ruang pendidikan di wilayah-wilayah padat penduduk yang saat ini minim layanan TK.</p>
+</blockquote>
+<p>Tutup sesi kerja basis data Anda:</p>
+<div id="m5-cell-20" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-19T14:35:09.093925Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-19T14:35:09.093196Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-19T14:35:09.099180Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-19T14:35:09.097693Z&quot;}}" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tutup koneksi basis data</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>koneksi.close()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="latihan-mandiri" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="latihan-mandiri"><span class="header-section-number">5.4</span> Latihan Mandiri</h2>
+<p>Kerjakan latihan ini di berkas notebook baru bernama <code>modul/latihan-05.ipynb</code> menggunakan <em>kernel</em> <code>analitika-perkotaan</code>. Pastikan alur kode Anda rapi dan terstruktur, serta jalankan perintah <strong>Restart kernel &amp; Run All</strong> untuk memverifikasi bahwa kode Anda bebas dari galat.</p>
+<p>Latihan ini menggunakan dataset kelurahan yang sama, namun dengan fokus analisis fasilitas pendidikan dasar (<strong>SD dan SMP</strong>) serta struktur lapangan usaha warga:</p>
+<ol type="1">
+<li><p><strong>Persiapan Data</strong>: Hubungkan notebook ke basis data <code>bdl.sqlite</code> dan tarik seluruh data kelurahan beserta kecamatan induknya ke DataFrame menggunakan Pandas.</p></li>
+<li><p><strong>Variabel Baru</strong>: Buat dua kolom baru untuk menghitung total fasilitas pendidikan dasar:</p>
+<ul>
+<li><code>total_sd</code> = <code>jml_sd_negeri</code> + <code>jml_sd_swasta</code></li>
+<li><code>total_smp</code> = <code>jml_smp_negeri</code> + <code>jml_smp_swasta</code></li>
+</ul></li>
+<li><p><strong>Diagram Batang Data Kategorikal</strong>: Hitung frekuensi tiap kategori lapangan usaha utama warga (<code>lap_usaha_sebagian_warga</code>) menggunakan <code>value_counts()</code> yang sudah Anda kenal di Modul 4, lalu sajikan hasilnya sebagai diagram batang. Urutkan batang dari kategori dengan frekuensi tertinggi.</p></li>
+<li><p><strong>Scatter Plot</strong>: Buat sebuah grafik sebar (<em>scatter plot</em>) untuk melihat hubungan antara jumlah SD (<code>total_sd</code>, sumbu X) dengan jumlah SMP (<code>total_smp</code>, sumbu Y) per kelurahan.</p></li>
+<li><p><strong>Box Plot Distribusi</strong>: Visualisasikan distribusi <code>total_sd</code> antar-kelurahan pada setiap kecamatan menggunakan <em>box plot</em> (<code>sns.boxplot</code> dengan sumbu Y berisi <code>nama_kec</code>). Amati kecamatan mana yang sebarannya paling lebar dan mana yang memiliki <em>outlier</em>.</p></li>
+<li><p><strong>Estetika Diagram</strong>: Poles diagram batang pada langkah 3 menggunakan opsi parameter kamus/dictionary: terapkan judul yang informatif, label sumbu yang bersih, warna palet yang harmonis, dan simpan grafik tersebut menggunakan <code>plt.savefig()</code> dengan resolusi 300 DPI.</p></li>
+<li><p><strong>Interpretasi &amp; Tutup</strong>: Tuliskan satu paragraf interpretasi singkat (storytelling) mengenai kesimpulan visualisasi Anda terhadap ketersediaan fasilitas SD dan SMP serta struktur lapangan usaha warga, lalu tutup koneksi basis data Anda.</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Disalin!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Disalin!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./modul-04.html" class="pagination-link" aria-label="*Exploratory Data Analysis* (EDA)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title"><em>Exploratory Data Analysis</em> (EDA)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

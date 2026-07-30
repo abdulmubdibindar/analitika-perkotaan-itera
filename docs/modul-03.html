@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="id" xml:lang="id"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Pengolahan Data Terstruktur dengan SQL (SQLite) – Analitika Perkotaan</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./modul-04.html" rel="next">
+<link href="./modul-02.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7fde21fbbed941212ff23fc867eda995.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-4b3ae02ca3d2c990793b4a58c5ee5acf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7fde21fbbed941212ff23fc867eda995.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-434d7e7f46c20ea3b5dec979eeaa14b2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-434d7e7f46c20ea3b5dec979eeaa14b2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-434d7e7f46c20ea3b5dec979eeaa14b2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Tidak ada hasil",
+    "search-matching-documents-text": "dokumen cocok",
+    "search-copy-link-title": "Salin tautan untuk mencari",
+    "search-hide-matches-text": "Sembunyikan kecocokan lainnya",
+    "search-more-match-text": "kecocokan lainnya di dokumen ini",
+    "search-more-matches-text": "kecocokan lainnya di dokumen ini",
+    "search-clear-button-title": "Hapus",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Batal",
+    "search-submit-button-title": "Kirim",
+    "search-label": "Mencari"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alihkan bilah sisi" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./modul-03.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan SQL (SQLite)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alihkan bilah sisi" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Mencari" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Analitika Perkotaan</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Mencari"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kata Pengantar</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Fondasi Lingkungan Kerja: Python <em>Offline</em>, Terminal, dan Direktori Proyek</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan Pandas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-03.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan SQL (SQLite)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title"><em>Exploratory Data Analysis</em> (EDA)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Visualisasi Data dengan Matplotlib dan Seaborn</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Daftar Isi</h2>
+   
+  <ul>
+  <li><a href="#pendahuluan" id="toc-pendahuluan" class="nav-link active" data-scroll-target="#pendahuluan"><span class="header-section-number">3.1</span> Pendahuluan</a></li>
+  <li><a href="#gambaran-umum-kasus" id="toc-gambaran-umum-kasus" class="nav-link" data-scroll-target="#gambaran-umum-kasus"><span class="header-section-number">3.2</span> Gambaran Umum Kasus</a></li>
+  <li><a href="#instruksi" id="toc-instruksi" class="nav-link" data-scroll-target="#instruksi"><span class="header-section-number">3.3</span> Instruksi</a>
+  <ul class="collapse">
+  <li><a href="#lemari-arsip-digital-pengenalan-sqlite-dan-koneksi-database" id="toc-lemari-arsip-digital-pengenalan-sqlite-dan-koneksi-database" class="nav-link" data-scroll-target="#lemari-arsip-digital-pengenalan-sqlite-dan-koneksi-database"><span class="header-section-number">3.3.1</span> Lemari Arsip Digital: Pengenalan SQLite dan Koneksi Database</a></li>
+  <li><a href="#menyusun-laci-data-membuat-tabel-dan-mengisi-data-dari-pandas" id="toc-menyusun-laci-data-membuat-tabel-dan-mengisi-data-dari-pandas" class="nav-link" data-scroll-target="#menyusun-laci-data-membuat-tabel-dan-mengisi-data-dari-pandas"><span class="header-section-number">3.3.2</span> Menyusun Laci Data: Membuat Tabel dan Mengisi Data dari Pandas</a></li>
+  <li><a href="#kueri-dasar-mengambil-data-dengan-select-dan-menyaring-dengan-where" id="toc-kueri-dasar-mengambil-data-dengan-select-dan-menyaring-dengan-where" class="nav-link" data-scroll-target="#kueri-dasar-mengambil-data-dengan-select-dan-menyaring-dengan-where"><span class="header-section-number">3.3.3</span> Kueri Dasar: Mengambil Data dengan <code>SELECT</code> dan Menyaring dengan <code>WHERE</code></a></li>
+  <li><a href="#penggabungan-wilayah-menghubungkan-tabel-kelurahan-dan-kecamatan-dengan-join" id="toc-penggabungan-wilayah-menghubungkan-tabel-kelurahan-dan-kecamatan-dengan-join" class="nav-link" data-scroll-target="#penggabungan-wilayah-menghubungkan-tabel-kelurahan-dan-kecamatan-dengan-join"><span class="header-section-number">3.3.4</span> Penggabungan Wilayah: Menghubungkan Tabel Kelurahan dan Kecamatan dengan <code>JOIN</code></a></li>
+  <li><a href="#agregasi-kota-mengelompokkan-data-dengan-group-by" id="toc-agregasi-kota-mengelompokkan-data-dengan-group-by" class="nav-link" data-scroll-target="#agregasi-kota-mengelompokkan-data-dengan-group-by"><span class="header-section-number">3.3.5</span> Agregasi Kota: Mengelompokkan Data dengan <code>GROUP BY</code></a></li>
+  <li><a href="#jembatan-sqlpandas-membaca-hasil-kueri-ke-dataframe-pandas" id="toc-jembatan-sqlpandas-membaca-hasil-kueri-ke-dataframe-pandas" class="nav-link" data-scroll-target="#jembatan-sqlpandas-membaca-hasil-kueri-ke-dataframe-pandas"><span class="header-section-number">3.3.6</span> Jembatan SQL–Pandas: Membaca Hasil Kueri ke DataFrame Pandas</a></li>
+  </ul></li>
+  <li><a href="#latihan-mandiri" id="toc-latihan-mandiri" class="nav-link" data-scroll-target="#latihan-mandiri"><span class="header-section-number">3.4</span> Latihan Mandiri</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-modul-3" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan SQL (SQLite)</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-important callout-titled" title="Sub-CPMK Pertemuan Ini">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Penting</span>Sub-CPMK Pertemuan Ini
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mahasiswa mampu mengoperasikan basis data relasional SQLite menggunakan kueri SQL dasar, menerapkan operasi <code>JOIN</code> untuk menghubungkan tabel relasional kelurahan–kecamatan, dan mengintegrasikan kueri SQL ke dalam <em>DataFrame</em> Pandas.</p>
+</div>
+</div>
+<section id="pendahuluan" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="pendahuluan"><span class="header-section-number">3.1</span> Pendahuluan</h2>
+<p><span class="teks-placeholder" style="color: #8a8a8a;">&lt;masukkan narasi yang menceritakan ‘big why’ mengelola basis data perkotaan yang relasional di sini&gt;</span></p>
+</section>
+<section id="gambaran-umum-kasus" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="gambaran-umum-kasus"><span class="header-section-number">3.2</span> Gambaran Umum Kasus</h2>
+<p>Dalam skala kota, menyimpan seluruh data dalam satu berkas tunggal menimbulkan redundansi: nama kecamatan yang sama ditulis berulang-ulang pada setiap baris kelurahannya, sehingga boros ruang dan rawan tidak konsisten ketika data dimutakhirkan. Apalagi di Indonesia pemekaran wilayah adalah isu yang sering diangkat (<a href="https://www.cnnindonesia.com/nasional/fokus/geliat-wacana-pemekaran-daerah-5678/all">Fokus: Geliat Wacana Pemekaran Daerah — CNN Indonesia</a>). Mengubah-ubah data tersebut dalam satu berkas tunggal hanya akan memperumit pembaruan.</p>
+<p>Perencana yang mengelola data lintas instansi perlu cara penyimpanan yang lebih tertib: <strong>basis data relasional</strong>. Menggunakan data profil kelurahan Kota Bandar Lampung dari PODES 2021 (BPS), kita akan memindahkan data kelurahan ke dalam basis data SQLite yang telah memuat tabel kecamatan, mengajukan pertanyaan kependudukan dan fasilitas pendidikan menggunakan kueri SQL — dari penyaringan sederhana hingga penggabungan kelurahan dengan kecamatan induknya — lalu menarik hasilnya kembali ke Pandas untuk diolah lebih lanjut.</p>
+</section>
+<section id="instruksi" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="instruksi"><span class="header-section-number">3.3</span> Instruksi</h2>
+<p>Buat notebook baru <code>modul/modul-03.ipynb</code> di direktori proyek Anda, sambungkan ke <em>kernel</em> <code>analitika-perkotaan</code>, dan kerjakan seluruh instruksi di dalamnya.</p>
+<section id="lemari-arsip-digital-pengenalan-sqlite-dan-koneksi-database" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="lemari-arsip-digital-pengenalan-sqlite-dan-koneksi-database"><span class="header-section-number">3.3.1</span> Lemari Arsip Digital: Pengenalan SQLite dan Koneksi Database</h3>
+<p>Sebelum memulai praktik, pahami dulu tiga konsep dasarnya: basis data relasional, SQL, dan SQLite.</p>
+<section id="apa-itu-basis-data-relasional" class="level4" data-number="3.3.1.1">
+<h4 data-number="3.3.1.1" class="anchored" data-anchor-id="apa-itu-basis-data-relasional"><span class="header-section-number">3.3.1.1</span> Apa itu Basis Data Relasional?</h4>
+<p><strong>Basis data relasional</strong> (<em>relational database</em>) adalah sistem penyimpanan data digital yang mengorganisasi data ke dalam kumpulan tabel dua dimensi (baris dan kolom) yang saling berhubungan — saling <strong>berelasi</strong> — satu sama lain. Model ini pertama kali dirancang oleh Edgar F. Codd pada tahun 1970, dengan tiga karakteristik utama:</p>
+<ul>
+<li><p><strong>Struktur tabular</strong> — setiap tabel mewakili satu entitas tertentu; misalnya satu tabel khusus data kelurahan dan satu tabel khusus data kecamatan.</p></li>
+<li><p><strong>Kunci relasi</strong> (<em>key</em>) — hubungan antar-tabel diikat oleh kolom pengenal unik yang sama; tabel kelurahan terhubung ke tabel kecamatan melalui kolom kunci wilayah <code>kode_kec</code>.</p></li>
+<li><p><strong>Efisiensi dan integritas</strong> — dengan memisahkan entitas ke tabel-tabel yang berelasi, kita menghindari redundansi (penulisan data berulang) dan menjaga data tetap konsisten ketika terjadi pemutakhiran wilayah.</p></li>
+</ul>
+<p>Dalam analisis perkotaan, perencana sering bekerja dengan banyak tabel yang saling berhubungan — data kependudukan, fasilitas, hingga ekonomi lintas proyek dan lintas instansi. Dibandingkan menumpuk semuanya di berkas-berkas CSV terpisah, basis data relasional menawarkan penyimpanan yang efisien, kueri lintas tabel, dan penghindaran redundansi.</p>
+</section>
+<section id="apa-itu-sql" class="level4" data-number="3.3.1.2">
+<h4 data-number="3.3.1.2" class="anchored" data-anchor-id="apa-itu-sql"><span class="header-section-number">3.3.1.2</span> Apa itu SQL?</h4>
+<p><strong>SQL</strong> (<em>Structured Query Language</em>) adalah bahasa standar untuk berkomunikasi dengan basis data relasional. Jika basis data adalah <strong>lemari arsip digital</strong> studio PWK, maka SQL adalah bahasa perintah tertib yang kita gunakan untuk meminta petugas arsip melakukan tindakan tertentu — mengambil berkas kelurahan tertentu, mencatat berkas baru, atau merekap fasilitas umum per kecamatan.</p>
+<p>Lalu di mana posisinya terhadap Pandas yang baru kita pelajari? Tabel berikut membandingkan keduanya <em>head-to-head</em> (diacu dari <em>SQL for Data Analysis</em>, Tanimura, 2021):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Dimensi Perbandingan</th>
+<th style="text-align: left;">SQL</th>
+<th style="text-align: left;">Python (Pandas)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Lokasi &amp; beban komputer</strong></td>
+<td style="text-align: left;">Pengolahan dilakukan langsung oleh sistem basis data di pusat penyimpanan; komputer kita tidak terbebani saat datanya sangat besar.</td>
+<td style="text-align: left;">Pengolahan dilakukan sepenuhnya di memori komputer kita sendiri; komputer bekerja lebih keras jika datanya sangat besar.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Kekakuan struktur data</strong></td>
+<td style="text-align: left;">Data harus ditata rapi sejak awal dalam tabel-tabel yang saling terhubung — seperti sekat permanen di laci arsip.</td>
+<td style="text-align: left;">Bentuk data lebih fleksibel dan bebas diubah di tengah jalan, tetapi perintah kodenya lebih panjang dan detail.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Mekanisme perulangan data</strong></td>
+<td style="text-align: left;">Otomatis memproses seluruh baris sekaligus; tidak perlu perintah membaca baris demi baris.</td>
+<td style="text-align: left;">Kadang perlu perintah khusus agar komputer membaca data baris demi baris secara berurutan.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Kelengkapan analisis</strong></td>
+<td style="text-align: left;">Sangat cepat untuk menyaring, menyatukan, dan merekap tabel, tetapi tidak bisa dipakai membangun model simulasi kota yang rumit.</td>
+<td style="text-align: left;">Ekosistem alat bantunya melimpah: grafik, visualisasi peta, hingga model simulasi masa depan kota.</td>
+</tr>
+</tbody>
+</table>
+<p>Keduanya bukan pesaing, melainkan pasangan kerja: SQL menyiapkan dan merekap data di lemari arsip, Pandas mengolah hasil rekapnya lebih lanjut. Persis alur itulah yang kita jalani pada modul ini.</p>
+</section>
+<section id="mengenal-sqlite" class="level4" data-number="3.3.1.3">
+<h4 data-number="3.3.1.3" class="anchored"><span class="header-section-number">3.3.1.3</span> Mengenal SQLite</h4>
+<p><strong>SQLite</strong> adalah basis data relasional yang unik karena bersifat <strong><em>serverless</em></strong>. Berdasarkan dokumentasi resmi SQLite.org, SQLite tidak memerlukan proses server latar belakang (<em>daemon</em>) ataupun koneksi jaringan: mesin SQLite adalah <em>library</em> yang berjalan langsung di dalam proses aplikasi kita (<em>in-process</em>). Seluruh isi basis data — berapa pun banyak tabelnya — disimpan dalam <strong>satu file biner tunggal</strong> di <em>disk</em> lokal, sehingga bersifat <em>zero-configuration</em>, portabel, dan mudah disalin antarfolder.</p>
+<p>Di sinilah jawaban teka-teki penting modul ini: <strong>satu file <code>.sqlite</code> adalah satu basis data utuh, bukan satu tabel</strong>. Berbeda dengan CSV yang satu file-nya hanya memuat satu tabel, satu file <code>.sqlite</code> adalah satu lemari arsip lengkap yang lacinya (tabelnya) bisa lebih dari satu.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Pengetahuan Komputer">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Pengetahuan Komputer
+</div>
+</div>
+<section id="basis-data-klien-server-vs-serverless" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="basis-data-klien-server-vs-serverless">Basis Data Klien-Server vs <em>Serverless</em></h3>
+<p>Basis data kelas industri seperti <strong>PostgreSQL</strong> bekerja dengan arsitektur <strong>klien-server</strong>: data dikelola oleh satu program server yang berjalan terus-menerus, dan analis mengaksesnya lewat jaringan memakai akun serta izin akses. Arsitektur ini unggul untuk data besar yang diakses banyak orang serentak — tetapi merepotkan untuk belajar karena menuntut instalasi dan konfigurasi server.</p>
+<p>SQLite memangkas semua itu: tanpa server, tanpa akun, cukup satu file. Karena kesederhanaannya, SQLite menjadi basis data yang paling banyak terpasang di dunia — tertanam di ponsel, peramban, hingga berbagai aplikasi sehari-hari.</p>
+<p>Satu klasifikasi lagi: SQLite dan PostgreSQL sama-sama berorientasi baris (<em>row-store</em>), menyimpan data per baris di <em>disk</em> — efisien untuk pencatatan dan pemutakhiran. Kontrasnya adalah basis data analitik berorientasi kolom (<em>column-store</em>) seperti BigQuery dan Snowflake, yang menyimpan data per kolom sehingga sangat cepat merekap dataset berskala raksasa.</p>
+</section>
+</div>
+<p>Praktik kita mulai. Muat <em>library</em> <code>sqlite3</code> — pustaka standar bawaan Python, tanpa instalasi tambahan — bersama Pandas, lalu buka koneksi ke file <code>bdl.sqlite</code> dari direktori dataset yang dibagikan dosen:</p>
+<div id="dad9bb06" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:49.881351Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:49.881081Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.519752Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.518546Z&quot;}}" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sqlite3</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>path_db <span class="op">=</span> <span class="st">"../dataset-ganjil-2026-2027/bdl.sqlite"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>koneksi <span class="op">=</span> sqlite3.<span class="ex">connect</span>(path_db)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>sqlite3.connect(...)</code> membuka jalur komunikasi ke lemari arsip dan menampungnya di variabel <code>koneksi</code>. Semua perintah SQL kita selanjutnya akan lewat jalur ini.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Penting!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Penting!
+</div>
+</div>
+<section id="path-salah-tidak-menimbulkan-galat" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="path-salah-tidak-menimbulkan-galat"><em>Path</em> Salah Tidak Menimbulkan Galat</h3>
+<p>Jika <em>path</em> yang diberikan ke <code>sqlite3.connect(...)</code> keliru, Python <strong>tidak akan protes</strong> — ia justru membuat file basis data baru yang kosong di lokasi keliru tersebut. Maka bila inspeksi pada langkah berikutnya tidak menemukan tabel apa pun, jangan lanjut: periksa kembali <code>path_db</code> Anda, hapus file kosong yang telanjur terbuat, lalu ulangi.</p>
+</section>
+</div>
+</section>
+<section id="inspeksi-isi-basis-data" class="level4" data-number="3.3.1.4">
+<h4 data-number="3.3.1.4" class="anchored"><span class="header-section-number">3.3.1.4</span> Inspeksi Isi Basis Data</h4>
+<p>Karena satu file dapat berisi banyak tabel, kebiasaan pertama saat menerima file SQLite adalah <strong>membuka lemarinya dan membaca daftar lacinya</strong>. SQLite menyediakan tabel sistem bernama <code>sqlite_master</code> (nama barunya: <code>sqlite_schema</code>) yang mencatat metadata seluruh objek di dalam basis data. Tiga kolom pentingnya: <code>type</code> (jenis objek: <code>table</code>, <code>index</code>, <code>view</code>, <code>trigger</code>), <code>name</code> (nama objek), dan <code>sql</code> (pernyataan <code>CREATE TABLE</code> asli pembuat objek itu).</p>
+<p>Jalankan kueri pertama Anda untuk mendaftar semua tabel:</p>
+<div id="a43d6d5e" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:52.522670Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:52.522369Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.527491Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.526545Z&quot;}}" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>kueri_daftar_tabel <span class="op">=</span> <span class="st">"SELECT name FROM sqlite_master WHERE type='table'"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>daftar_tabel <span class="op">=</span> koneksi.execute(kueri_daftar_tabel).fetchall()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(daftar_tabel)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[('kecamatan',)]</code></pre>
+</div>
+</div>
+<p>Bacalah polanya: <code>koneksi.execute(...)</code> mengirim kueri ke basis data, dan <code>.fetchall()</code> mengambil seluruh baris hasilnya sebagai sebuah <em>list</em> (Modul 2) — setiap baris hasil tampil sebagai satu kelompok nilai di dalam tanda kurung. Hasilnya satu baris saja: lemari arsip kita baru berisi satu laci, tabel <code>kecamatan</code>.</p>
+<p>Untuk membaca struktur kolom sebuah tabel, gunakan perintah sistem <code>PRAGMA table_info(nama_tabel)</code>. Ia mengembalikan rincian setiap kolom: nomor urut, nama kolom, tipe data, wajib-tidaknya terisi (<code>notnull</code>), nilai bawaan, dan status kunci primer (<code>pk</code>). Bentuk kueri standarnya juga tersedia: <code>SELECT * FROM pragma_table_info('nama_tabel')</code>.</p>
+<div id="0c301c4c" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:52.529588Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:52.529369Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.534696Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.533723Z&quot;}}" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>struktur_kecamatan <span class="op">=</span> koneksi.execute(<span class="st">"PRAGMA table_info(kecamatan)"</span>).fetchall()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(struktur_kecamatan)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[(0, 'kode_kec', 'INTEGER', 0, None, 0), (1, 'nama_kec', 'TEXT', 0, None, 0)]</code></pre>
+</div>
+</div>
+<p>Tabel <code>kecamatan</code> berisi dua kolom: <code>kode_kec</code> bertipe <code>INTEGER</code> (bilangan bulat) dan <code>nama_kec</code> bertipe <code>TEXT</code> (teks). Sekarang intip isinya — perintah <code>SELECT</code> akan kita bedah tuntas pada bagian Kueri Dasar; untuk sekarang cukup baca <code>SELECT * FROM kecamatan LIMIT 5</code> sebagai “ambilkan semua kolom dari tabel kecamatan, lima baris pertama saja”:</p>
+<div id="d82285b1" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:52.536950Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:52.536597Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.541753Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.540776Z&quot;}}" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(koneksi.execute(<span class="st">"SELECT * FROM kecamatan LIMIT 5"</span>).fetchall())</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[(10, 'Teluk Betung Barat'), (11, 'Telukbetung Timur'), (20, 'Teluk Betung Selatan'), (21, 'Bumi Waras'), (30, 'Panjang')]</code></pre>
+</div>
+</div>
+<p>Kecamatan-kecamatan Kota Bandar Lampung tercatat rapi di laci ini, masing-masing dengan kode wilayah resmi BPS-nya.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Pengetahuan VS Code">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Kiat</span>Pengetahuan VS Code
+</div>
+</div>
+<section id="inspeksi-visual-dengan-sqlite-explorer" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="inspeksi-visual-dengan-sqlite-explorer">Inspeksi Visual dengan SQLite Explorer</h3>
+<p>File <code>.sqlite</code> adalah file biner — jika dibuka langsung di editor, isinya tampak seperti karakter acak. Agar dapat menjelajahinya secara visual, pasang ekstensi <strong>SQLite</strong> (penerbit: alexcvzz) dari panel Extensions VS Code.</p>
+<p>Setelah terpasang: buka <em>Command Palette</em> (<code>Ctrl+Shift+P</code>), jalankan <strong>SQLite: Open Database</strong>, lalu pilih file <code>bdl.sqlite</code>. Panel <strong>SQLITE EXPLORER</strong> akan muncul di sisi kiri bawah; bentangkan untuk melihat daftar tabel, dan klik ikon panah di samping nama tabel untuk menampilkan isinya (<em>Show Table</em>).</p>
+<p>Inilah padanan visual dari kueri <code>sqlite_master</code> dan <code>PRAGMA table_info</code> yang barusan Anda jalankan — dua cara membaca lemari arsip yang sama.</p>
+</section>
+</div>
+</section>
+</section>
+<section id="menyusun-laci-data-membuat-tabel-dan-mengisi-data-dari-pandas" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="menyusun-laci-data-membuat-tabel-dan-mengisi-data-dari-pandas"><span class="header-section-number">3.3.2</span> Menyusun Laci Data: Membuat Tabel dan Mengisi Data dari Pandas</h3>
+<p>Laci kelurahan belum ada — kita yang akan menatanya sendiri dari berkas <code>bdl_kelurahan.csv</code> yang sudah kita kenal di Modul 2. Baca kembali berkas itu memakai pola <code>path_data</code> dan <code>kolom_pilihan</code>; kali ini kolom yang dibutuhkan adalah kunci wilayah, identitas kelurahan, kepadatan penduduk, dan fasilitas TK:</p>
+<div id="9af555a7" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:52.543976Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:52.543623Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.577594Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.576493Z&quot;}}" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>path_data <span class="op">=</span> <span class="st">"../dataset-ganjil-2026-2027/bdl_kelurahan.csv"</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>kolom_pilihan <span class="op">=</span> [<span class="st">"kode_kec"</span>, <span class="st">"nama_kec"</span>, <span class="st">"nama_des"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"kepadatan_pddk"</span>, <span class="st">"jml_tk_negeri"</span>, <span class="st">"jml_tk_swasta"</span>]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>df_kelurahan <span class="op">=</span> pd.read_csv(path_data, usecols<span class="op">=</span>kolom_pilihan)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>df_kelurahan.head()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>   kode_kec            nama_kec            nama_des  jml_tk_negeri  \
+0        10  Teluk Betung Barat              Bakung              0   
+1        10  Teluk Betung Barat             Kuripan              0   
+2        10  Teluk Betung Barat  Negeri Olok Gading              0   
+3        10  Teluk Betung Barat         Sukarame Ii              0   
+4        10  Teluk Betung Barat          Batu Putuk              0   
+
+   jml_tk_swasta  kepadatan_pddk  
+0              2            6479  
+1              0           16321  
+2              1            7761  
+3              3            1514  
+4              1            2214  </code></pre>
+</div>
+</div>
+<p>Perhatikan kolom <code>nama_kec</code>: nama kecamatan yang sama tertulis berulang pada setiap baris kelurahannya. Buktikan skala redundansinya dengan dua alat Modul 2:</p>
+<div id="1e444135" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:52.580275Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:52.579894Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.586506Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.585537Z&quot;}}" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(df_kelurahan))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_kelurahan[<span class="st">"nama_kec"</span>].nunique())</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>126
+20</code></pre>
+</div>
+</div>
+<p>Dari 126 baris, hanya ada 20 nama kecamatan unik — artinya setiap nama kecamatan ditulis berulang rata-rata enam kali. Padahal daftar resmi kecamatan sudah terstruktur rapi di tabel <code>kecamatan</code>. Menyimpan <code>nama_kec</code> sekali lagi di tabel kelurahan berarti memboroskan ruang dan membuka risiko ketidakonsistenan bila ada pemutakhiran nama.</p>
+<p>Maka lakukan <strong>normalisasi</strong> sederhana: buang kolom <code>nama_kec</code> (cukup kunci <code>kode_kec</code> yang tinggal, sebagai pengikat relasi), lalu tulis <em>DataFrame</em>-nya menjadi tabel baru bernama <code>kelurahan</code> menggunakan <code>to_sql</code>:</p>
+<div id="8b19d1de" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:52.588696Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:52.588470Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.611100Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.609940Z&quot;}}" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df_kelurahan <span class="op">=</span> df_kelurahan.drop(columns<span class="op">=</span>[<span class="st">"nama_kec"</span>])</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df_kelurahan.to_sql(<span class="st">"kelurahan"</span>, koneksi, if_exists<span class="op">=</span><span class="st">"replace"</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>126</code></pre>
+</div>
+</div>
+<p>Tiga hal terjadi pada perintah <code>to_sql</code> itu. Pertama, Pandas membuatkan tabel <code>kelurahan</code> di dalam basis data dan menyalin seluruh barisnya — angka yang tampil di bawah sel adalah jumlah baris yang tersalin. Kedua, <code>index=False</code> mencegah nomor indeks <em>DataFrame</em> ikut tersimpan sebagai kolom tersendiri. Ketiga, <code>if_exists="replace"</code> menentukan sikap ketika tabel bernama sama sudah ada: hapus dan tulis ulang.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Penting!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Penting!
+</div>
+</div>
+<section id="galat-table-kelurahan-already-exists" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="galat-table-kelurahan-already-exists">Galat <code>table kelurahan already exists</code></h3>
+<p>Tanpa <code>if_exists="replace"</code>, perilaku bawaan <code>to_sql</code> adalah <code>if_exists="fail"</code>: eksekusi kedua atas sel yang sama akan gagal dengan galat <code>ValueError: Table 'kelurahan' already exists</code>, karena lacinya memang sudah terisi. Ingat ritual <strong>Restart <em>kernel</em> &amp; Run All</strong> dari Modul 2 — tanpa <code>replace</code>, notebook Anda tidak akan lolos ritual itu. Karena tabel ini milik kita dan sumber kebenarannya adalah berkas CSV, menghapus lalu menulis ulang adalah sikap yang tepat di sini.</p>
+</section>
+</div>
+<section id="verifikasi-hasil-pengisian-data" class="level4" data-number="3.3.2.1">
+<h4 data-number="3.3.2.1" class="anchored"><span class="header-section-number">3.3.2.1</span> Verifikasi Hasil Pengisian Data</h4>
+<p>Buktikan bahwa lemari arsip kini berisi dua laci, lalu periksa struktur laci baru itu. Variabel <code>kueri_daftar_tabel</code> masih tersimpan di papan tulis <em>kernel</em> — pakai ulang saja:</p>
+<div id="853bbb21" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:52.613560Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:52.613291Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.618927Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.617926Z&quot;}}" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(koneksi.execute(kueri_daftar_tabel).fetchall())</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(koneksi.execute(<span class="st">"PRAGMA table_info(kelurahan)"</span>).fetchall())</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[('kecamatan',), ('kelurahan',)]
+[(0, 'kode_kec', 'INTEGER', 0, None, 0), (1, 'nama_des', 'TEXT', 0, None, 0), (2, 'jml_tk_negeri', 'INTEGER', 0, None, 0), (3, 'jml_tk_swasta', 'INTEGER', 0, None, 0), (4, 'kepadatan_pddk', 'INTEGER', 0, None, 0)]</code></pre>
+</div>
+</div>
+<p>Dua tabel dalam satu file — persis seperti janji konsep di awal. Perhatikan pula tipe datanya: <code>to_sql</code> menerjemahkan tipe Pandas secara otomatis menjadi <code>INTEGER</code> untuk kolom bilangan bulat, <code>REAL</code> untuk bilangan desimal, dan <code>TEXT</code> untuk teks. Silakan segarkan panel SQLite Explorer Anda (ikon <em>refresh</em>) — tabel <code>kelurahan</code> kini juga tampil di sana.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Penting!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Penting!
+</div>
+</div>
+<section id="basis-data-ini-dipakai-lagi-di-modul-modul-berikutnya" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="basis-data-ini-dipakai-lagi-di-modul-modul-berikutnya">Basis Data Ini Dipakai Lagi di Modul-Modul Berikutnya</h3>
+<p>Lemari arsip <code>bdl.sqlite</code> yang baru Anda tata bukan sekadar latihan sekali pakai: modul-modul berikutnya akan <strong>membuka kembali basis data ini</strong> sebagai sumber data praktik. Jangan menghapus atau memindahkan file tersebut dari direktori dataset, dan pastikan tabel <code>kelurahan</code> benar-benar terbentuk (lolos verifikasi di atas) sebelum melanjutkan. Jika di kemudian hari file ini rusak atau terhapus, tabel <code>kelurahan</code> selalu dapat ditata ulang dari berkas CSV sumbernya dengan mengulang bagian ini.</p>
+</section>
+</div>
+</section>
+</section>
+<section id="kueri-dasar-mengambil-data-dengan-select-dan-menyaring-dengan-where" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="kueri-dasar-mengambil-data-dengan-select-dan-menyaring-dengan-where"><span class="header-section-number">3.3.3</span> Kueri Dasar: Mengambil Data dengan <code>SELECT</code> dan Menyaring dengan <code>WHERE</code></h3>
+<p>Lemari sudah tertata; saatnya belajar meminta petugas arsip bekerja. Kueri pengambilan data tersusun dari klausa-klausa: <code>SELECT</code> (kolom apa yang diambil), <code>FROM</code> (dari tabel mana), <code>WHERE</code> (baris mana yang lolos saringan), <code>ORDER BY</code> (diurutkan menurut apa; tambahkan <code>DESC</code> untuk urutan menurun), dan <code>LIMIT</code> (berapa baris maksimal yang dikembalikan). Klausa <code>WHERE</code> adalah padanan penyaringan baris Pandas pada Modul 2 — operator perbandingannya (<code>&gt;</code>, <code>&lt;=</code>, dan kawan-kawannya) bekerja serupa.</p>
+<p>Dua bekal tambahan dari Tanimura (2021, Bab 2) untuk menghadapi data lapangan:</p>
+<ol type="1">
+<li><p><strong>Penanganan nilai kosong</strong> — data yang hilang direpresentasikan sebagai <code>NULL</code>, dan menyaringnya memakai operator khusus <code>IS NULL</code> atau <code>IS NOT NULL</code> (bukan <code>= NULL</code>). Kolom-kolom PODES yang kita pakai kebetulan terisi lengkap, tetapi saringan ini adalah sabuk pengaman standar ketika bekerja dengan data instansi yang kelengkapannya belum tentu terjamin.</p></li>
+<li><p><strong>Konversi tipe data</strong> (<em>type casting</em>) — SQLite bertipe dinamis; untuk perhitungan yang konsisten kita bisa memaksa tipe tertentu secara eksplisit dengan <code>CAST(kolom AS tipe)</code>. Basis data lain seperti PostgreSQL menyediakan jalan pintas berupa operator <code>::</code>.</p></li>
+</ol>
+<p>Susun kueri untuk menemukan kelurahan terpadat: kepadatan di atas 10.000 jiwa/km², urut dari yang terpadat, sepuluh teratas. Kueri sepanjang ini tidak nyaman ditulis sebagai satu baris — tampung dalam string multi-baris:</p>
+<div id="a01e8d38" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:52.621605Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:52.621341Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.627978Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.626950Z&quot;}}" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>kueri_dasar <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="st">    nama_des,</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="st">    kode_kec,</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="st">    CAST(kepadatan_pddk AS REAL) AS kepadatan</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="st">FROM</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="st">    kelurahan</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="st">WHERE</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="st">    kepadatan_pddk IS NOT NULL</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="st">    AND kepadatan_pddk &gt; 10000</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="st">ORDER BY</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="st">    kepadatan DESC</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="st">LIMIT 10</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>hasil_dasar <span class="op">=</span> koneksi.execute(kueri_dasar).fetchall()</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(hasil_dasar)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[('Kota Karang', 11, 43907.0), ('Tanjung Agung', 40, 37717.0), ('Sawah Lama', 40, 35775.0), ('Sukajawa', 70, 31830.0), ('Sukamenanti', 80, 28790.0), ('Kebon Jeruk', 40, 26592.0), ('Sawah Brebes', 40, 26055.0), ('Kaliawi', 60, 25700.0), ('Teluk Betung', 20, 25011.0), ('Kota Karang Raya', 11, 23796.0)]</code></pre>
+</div>
+</div>
+<p>Sepuluh kelurahan terpadat Bandar Lampung kini di tangan Anda. Klausa <code>AS kepadatan</code> pada <code>SELECT</code> memberi nama panggilan (<em>alias</em>) untuk kolom hasil — nama itulah yang dikenali <code>ORDER BY</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Konsep Python">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Konsep Python
+</div>
+</div>
+<section id="string-multi-baris-triple-quoted" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="string-multi-baris-triple-quoted">String Multi-baris (<em>Triple-Quoted</em>)</h3>
+<p>Di Modul 1, string selalu kita tulis satu baris dengan sepasang tanda kutip. Python menyediakan bentuk panjangnya: <strong>string multi-baris</strong>, diapit tiga tanda kutip (<code>"""</code> di awal dan di akhir). Segala yang berada di antaranya — ganti baris, indentasi, spasi — tersimpan apa adanya sebagai <strong>satu nilai string biasa</strong>.</p>
+<p>Itulah sebabnya <code>kueri_dasar</code> dapat kita tata bertingkat agar enak dibaca tanpa menimbulkan galat sintaksis: bagi Python ia tetap satu string utuh yang tinggal dikirim ke basis data. Pola ini akan sering kembali setiap kali kita menampung teks panjang di dalam kode.</p>
+</section>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Pengetahuan Komputer">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Pengetahuan Komputer
+</div>
+</div>
+<section id="kapital-indentasi-dan-urutan-evaluasi" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="kapital-indentasi-dan-urutan-evaluasi">KAPITAL, Indentasi, dan Urutan Evaluasi</h3>
+<p>Bagi basis data, <code>select</code> dan <code>SELECT</code> sama saja. Penulisan kata kunci dengan huruf KAPITAL dan pemenggalan klausa dengan indentasi adalah <strong>konvensi gaya</strong> antarmanusia (Tanimura, 2021, Bab 8): mata cepat menangkap kerangka kueri, dan kueri panjang tetap terbaca.</p>
+<p>Trivia keduanya lebih dalam: urutan penulisan klausa bukanlah urutan kerjanya. Secara internal, basis data mengevaluasi <code>FROM</code> → <code>WHERE</code> → <code>GROUP BY</code> → <code>HAVING</code> → <code>SELECT</code> → <code>DISTINCT</code> → <code>ORDER BY</code> → <code>LIMIT</code>. Jadi meski <code>SELECT</code> ditulis paling atas, ia justru dievaluasi belakangan — petugas arsip memilih laci dulu, menyaring berkasnya, baru memutuskan kolom mana yang disalin ke laporan.</p>
+</section>
+</div>
+</section>
+<section id="penggabungan-wilayah-menghubungkan-tabel-kelurahan-dan-kecamatan-dengan-join" class="level3" data-number="3.3.4">
+<h3 data-number="3.3.4" class="anchored" data-anchor-id="penggabungan-wilayah-menghubungkan-tabel-kelurahan-dan-kecamatan-dengan-join"><span class="header-section-number">3.3.4</span> Penggabungan Wilayah: Menghubungkan Tabel Kelurahan dan Kecamatan dengan <code>JOIN</code></h3>
+<p>Hasil kueri barusan hanya memuat <code>kode_kec</code> — angka yang tidak bercerita. Nama kecamatannya ada di laci sebelah. Operasi <code>JOIN</code> menyatukan berkas dari dua laci menggunakan pengikat kunci relasi: klausa <code>ON kel.kode_kec = kec.kode_kec</code> memerintahkan petugas arsip menjodohkan setiap baris kelurahan dengan baris kecamatan yang kode wilayahnya sama.</p>
+<p>Dua perkakas penyerta <code>JOIN</code>:</p>
+<ul>
+<li><p><strong><em>Alias</em> tabel</strong> — <code>kelurahan AS kel</code> memberi nama panggilan pendek, sehingga penyebutan kolom lintas tabel (<code>kel.nama_des</code>, <code>kec.nama_kec</code>) tetap ringkas.</p></li>
+<li><p><strong>Empat jenis <code>JOIN</code></strong> — <code>INNER JOIN</code> hanya mengembalikan baris yang berjodoh di kedua tabel; <code>LEFT JOIN</code> mempertahankan seluruh baris tabel kiri walau tidak berjodoh; <code>RIGHT JOIN</code> kebalikannya; <code>FULL OUTER JOIN</code> mempertahankan keduanya. Kita memakai <code>LEFT JOIN</code> dengan tabel <code>kelurahan</code> di kiri: setiap kelurahan wajib tampil, berjodoh maupun tidak.</p></li>
+</ul>
+<p>Satu kewaspadaan dari Tanimura (2021, Bab 2): <code>JOIN</code> yang kuncinya bermasalah dapat menggandakan baris hasil secara diam-diam. Kata kunci <code>DISTINCT</code> tepat setelah <code>SELECT</code> memerintahkan pembuangan baris hasil yang kembar persis — sekaligus menjadi alat pembuktian: bila jumlah baris hasil ber-<code>DISTINCT</code> tidak berkurang, tidak ada penggandaan yang terjadi.</p>
+<div id="5bee95f2" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:52.630432Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:52.630223Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.635748Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.634778Z&quot;}}" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>kueri_gabung <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT DISTINCT</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="st">    kel.nama_des,</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="st">    kec.nama_kec,</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="st">    kel.kepadatan_pddk</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="st">FROM</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="st">    kelurahan AS kel</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="st">LEFT JOIN</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="st">    kecamatan AS kec ON kel.kode_kec = kec.kode_kec</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="st">ORDER BY</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="st">    kepadatan_pddk DESC</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="st">LIMIT 10</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>hasil_gabung <span class="op">=</span> koneksi.execute(kueri_gabung).fetchall()</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(hasil_gabung)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[('Kota Karang', 'Telukbetung Timur', 43907), ('Tanjung Agung', 'Tanjung Karang Timur', 37717), ('Sawah Lama', 'Tanjung Karang Timur', 35775), ('Sukajawa', 'Tanjung Karang Barat', 31830), ('Sukamenanti', 'Kedaton', 28790), ('Kebon Jeruk', 'Tanjung Karang Timur', 26592), ('Sawah Brebes', 'Tanjung Karang Timur', 26055), ('Kaliawi', 'Tanjung Karang Pusat', 25700), ('Teluk Betung', 'Teluk Betung Selatan', 25011), ('Kota Karang Raya', 'Telukbetung Timur', 23796)]</code></pre>
+</div>
+</div>
+<p>Sekarang setiap kelurahan terpadat tampil bersama nama kecamatan induknya — dua laci menyatu dalam satu laporan.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Pengetahuan Komputer">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Pengetahuan Komputer
+</div>
+</div>
+<section id="kunci-primer-dan-kunci-asing" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="kunci-primer-dan-kunci-asing">Kunci Primer dan Kunci Asing</h3>
+<p>Pada tabel <code>kecamatan</code>, kolom <code>kode_kec</code> berperan sebagai <strong>kunci primer</strong> (<em>primary key</em>): pengenal unik yang nilainya pantang kembar — satu kode, satu kecamatan. Pada tabel <code>kelurahan</code>, kolom <code>kode_kec</code> yang sama berperan sebagai <strong>kunci asing</strong> (<em>foreign key</em>): penunjuk ke baris tabel lain yang boleh berulang — banyak kelurahan menunjuk satu kecamatan induk yang sama.</p>
+<p>Mengapa mengikat relasi dengan kode, bukan dengan nama? Karena nama itu rapuh: ejaannya bisa berbeda antardokumen (misalnya “Teluk Betung” dan “Telukbetung”) dan namanya bisa berganti saat pemekaran wilayah, sedangkan kode wilayah resmi BPS dijaga konsisten. Inilah alasan kolom <code>nama_kec</code> aman kita buang dari tabel kelurahan: relasinya sudah dijamin oleh kunci.</p>
+</section>
+</div>
+</section>
+<section id="agregasi-kota-mengelompokkan-data-dengan-group-by" class="level3" data-number="3.3.5">
+<h3 data-number="3.3.5" class="anchored" data-anchor-id="agregasi-kota-mengelompokkan-data-dengan-group-by"><span class="header-section-number">3.3.5</span> Agregasi Kota: Mengelompokkan Data dengan <code>GROUP BY</code></h3>
+<p>Perencana jarang berhenti di daftar kelurahan; laporan akhirnya biasanya berupa rekap pada unit analisis kecamatan (Modul 2). Di SQL, rekap seperti itu dibuat dengan klausa <code>GROUP BY</code>, yang mengelompokkan baris-baris bernilai sama, lalu <strong>fungsi agregasi</strong> yang merangkum tiap kelompok menjadi satu angka: <code>AVG</code> (rata-rata), <code>SUM</code> (jumlah total), <code>COUNT</code> (cacah baris), <code>MIN</code>, dan <code>MAX</code>. <code>value_counts()</code> yang Anda pakai di Modul 2 sesungguhnya adalah <code>GROUP BY</code> + <code>COUNT</code> versi Pandas — dan inilah “rekapitulasi per kecamatan yang lebih kaya” yang dijanjikan modul lalu.</p>
+<p>Aturan emasnya: <strong>setiap kolom pada <code>SELECT</code> yang tidak dibungkus fungsi agregasi wajib dicantumkan di <code>GROUP BY</code></strong> — petugas arsip harus tahu persis menurut apa berkas dikelompokkan.</p>
+<section id="penanganan-nilai-null-dengan-coalesce" class="level4" data-number="3.3.5.1">
+<h4 data-number="3.3.5.1" class="anchored" data-anchor-id="penanganan-nilai-null-dengan-coalesce"><span class="header-section-number">3.3.5.1</span> Penanganan Nilai <code>NULL</code> dengan <code>COALESCE</code></h4>
+<p>Satu jebakan aritmetika SQL: angka yang dijumlahkan dengan <code>NULL</code> hasilnya <code>NULL</code>. Bila salah satu dari <code>jml_tk_negeri + jml_tk_swasta</code> kosong, seluruh hasil penjumlahannya ikut kosong. Penangkalnya adalah fungsi <code>COALESCE(kolom, nilai_cadangan)</code> (Tanimura, 2021, Bab 2): ia memeriksa nilai dari kiri ke kanan dan mengembalikan yang pertama tidak-<code>NULL</code> — sehingga <code>COALESCE(jml_tk_negeri, 0)</code> berarti “pakai nilainya, atau <code>0</code> bila kosong”. Kolom TK kita memang terisi lengkap, tetapi membiasakan <code>COALESCE</code> pada penjumlahan lintas kolom adalah disiplin yang menyelamatkan ketika data instansi datang bolong-bolong.</p>
+<p>Susun rekapnya: rata-rata jumlah TK (negeri + swasta) per kecamatan, beserta cacah kelurahannya, urut dari yang tertinggi:</p>
+<div id="75441fbe" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:52.638314Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:52.638032Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.644597Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.643782Z&quot;}}" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>kueri_rekap <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="st">    kec.nama_kec,</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="st">    COUNT(kel.nama_des) AS jumlah_kelurahan,</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="st">    AVG(COALESCE(kel.jml_tk_negeri, 0) + COALESCE(kel.jml_tk_swasta, 0)) AS rata_rata_tk</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="st">FROM</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="st">    kecamatan AS kec</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="st">LEFT JOIN</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="st">    kelurahan AS kel ON kec.kode_kec = kel.kode_kec</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="st">GROUP BY</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="st">    kec.nama_kec</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="st">ORDER BY</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="st">    rata_rata_tk DESC</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>hasil_rekap <span class="op">=</span> koneksi.execute(kueri_rekap).fetchall()</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(hasil_rekap)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[('Sukarame', 6, 5.833333333333333), ('Labuhan Ratu', 6, 4.166666666666667), ('Kedamaian', 7, 4.142857142857143), ('Rajabasa', 7, 3.857142857142857), ('Way Halim', 6, 3.0), ('Sukabumi', 7, 2.857142857142857), ('Langkapura', 5, 2.6), ('Teluk Betung Utara', 6, 2.5), ('Kemiling', 9, 2.4444444444444446), ('Tanjung Karang Barat', 7, 2.4285714285714284), ('Kedaton', 7, 2.4285714285714284), ('Panjang', 8, 2.375), ('Teluk Betung Selatan', 6, 2.3333333333333335), ('Tanjung Karang Pusat', 7, 2.2857142857142856), ('Tanjung Senang', 5, 2.0), ('Tanjung Karang Timur', 5, 2.0), ('Telukbetung Timur', 6, 1.8333333333333333), ('Enggal', 6, 1.5), ('Teluk Betung Barat', 5, 1.4), ('Bumi Waras', 5, 1.2)]</code></pre>
+</div>
+</div>
+<p>Perhatikan arah <code>JOIN</code>-nya kita balik — <code>kecamatan</code> di kiri — agar seluruh kecamatan pasti tampil di rekap, termasuk seandainya ada kecamatan yang tidak punya baris kelurahan.</p>
+<p>Rekap 20 kecamatan itu benar isinya, tetapi bentuknya masih deretan baris polos hasil <code>fetchall()</code>: sulit dibaca, dan belum bisa diolah lanjut. Kita butuh jembatan kembali ke perkakas yang sudah kita kuasai.</p>
+</section>
+</section>
+<section id="jembatan-sqlpandas-membaca-hasil-kueri-ke-dataframe-pandas" class="level3" data-number="3.3.6">
+<h3 data-number="3.3.6" class="anchored" data-anchor-id="jembatan-sqlpandas-membaca-hasil-kueri-ke-dataframe-pandas"><span class="header-section-number">3.3.6</span> Jembatan SQL–Pandas: Membaca Hasil Kueri ke DataFrame Pandas</h3>
+<p>Jembatan itu bernama <code>pd.read_sql(kueri, koneksi)</code>: kirimkan kueri lewat koneksi, dan hasilnya langsung tersaji sebagai <em>DataFrame</em> — lengkap dengan nama kolom sesuai <em>alias</em> pada <code>SELECT</code>. Jalankan ulang <code>kueri_rekap</code> yang masih tersimpan di papan tulis <em>kernel</em>:</p>
+<div id="bc60476e" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:52.647395Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:52.647198Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.659016Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.658043Z&quot;}}" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df_rekap <span class="op">=</span> pd.read_sql(kueri_rekap, koneksi)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>df_rekap.head(<span class="dv">10</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>               nama_kec  jumlah_kelurahan  rata_rata_tk
+0              Sukarame                 6      5.833333
+1          Labuhan Ratu                 6      4.166667
+2             Kedamaian                 7      4.142857
+3              Rajabasa                 7      3.857143
+4             Way Halim                 6      3.000000
+5              Sukabumi                 7      2.857143
+6            Langkapura                 5      2.600000
+7    Teluk Betung Utara                 6      2.500000
+8              Kemiling                 9      2.444444
+9  Tanjung Karang Barat                 7      2.428571</code></pre>
+</div>
+</div>
+<p>Bandingkan dengan keluaran <code>fetchall()</code> di atas: isinya sama, wujudnya berbeda — kini berupa tabel rapi yang siap disaring, direkap ulang, atau digabung dengan data lain memakai seluruh kemampuan Pandas dari Modul 2. Terbacalah alur lengkap modul ini: <strong>CSV → <code>to_sql</code> → basis data SQLite → kueri SQL → <code>read_sql</code> → <em>DataFrame</em></strong>. Lemari arsip menertibkan penyimpanan; Pandas melanjutkan analisis.</p>
+<section id="menutup-sesi-kerja-basis-data" class="level4" data-number="3.3.6.1">
+<h4 data-number="3.3.6.1" class="anchored"><span class="header-section-number">3.3.6.1</span> Menutup Sesi Kerja Basis Data</h4>
+<p>Tutup koneksi setiap kali selesai bekerja:</p>
+<div id="dc54af67" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-18T02:01:52.661359Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-18T02:01:52.661101Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-18T02:01:52.665287Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-18T02:01:52.664268Z&quot;}}" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>koneksi.close()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled" title="Penting!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Penting!
+</div>
+</div>
+<section id="tutup-koneksi-sebelum-pulang" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="tutup-koneksi-sebelum-pulang">Tutup Koneksi Sebelum Pulang</h3>
+<p>Koneksi yang dibiarkan terbuka dapat mengunci file basis data — program lain (termasuk SQLite Explorer) bisa tertolak mengaksesnya, dan penulisan yang terputus di tengah berisiko merusak file. Ibaratnya laci lemari arsip: selesai bekerja, dorong lacinya sampai tertutup. Setelah <code>koneksi.close()</code>, variabel <code>koneksi</code> tidak dapat dipakai lagi; jika masih ingin mengueri, buka koneksi baru dengan <code>sqlite3.connect(...)</code>.</p>
+</section>
+</div>
+</section>
+</section>
+</section>
+<section id="latihan-mandiri" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="latihan-mandiri"><span class="header-section-number">3.4</span> Latihan Mandiri</h2>
+<p>Kerjakan di notebook baru <code>modul/latihan-03.ipynb</code> dengan <em>kernel</em> <code>analitika-perkotaan</code>. Alurnya sama persis dengan instruksi di atas; yang berganti hanya fasilitasnya — dari TK ke <strong>SMP</strong>.</p>
+<ol type="1">
+<li><p><strong>Buka dan inspeksi.</strong> Buka koneksi ke <code>bdl.sqlite</code> memakai variabel <em>path</em>, lalu daftar seluruh tabelnya dengan kueri <code>sqlite_master</code>.</p></li>
+<li><p><strong>Tata ulang laci kelurahan.</strong> Baca <code>bdl_kelurahan.csv</code> memakai <code>path_data</code> dan <code>kolom_pilihan</code> berisi: <code>kode_kec</code>, <code>nama_des</code>, <code>jml_smp_negeri</code>, <code>jml_smp_swasta</code>. Tulis ke tabel <code>kelurahan</code> dengan <code>to_sql</code> — pikirkan sendiri argumen <code>if_exists</code> yang tepat, mengingat tabel itu sudah ada.</p></li>
+<li><p><strong>Saring dengan kueri dasar.</strong> Dalam string multi-baris, susun kueri yang menampilkan kelurahan yang sama sekali belum memiliki SMP (jumlah SMP negeri ditambah swasta sama dengan nol) — amankan penjumlahannya dengan <code>COALESCE</code>.</p></li>
+<li><p><strong>Rekap per kecamatan.</strong> Susun kueri <code>LEFT JOIN</code> + <code>GROUP BY</code> untuk menghitung rata-rata jumlah SMP (negeri + swasta) per kecamatan, urut dari rata-rata <strong>terendah</strong> sehingga kecamatan yang paling minim fasilitas tampil teratas.</p></li>
+<li><p><strong>Tarik ke Pandas.</strong> Jalankan kueri rekap tersebut lewat <code>pd.read_sql</code>, tampung hasilnya di <em>DataFrame</em> <code>df_latihan</code>, lalu tampilkan.</p></li>
+<li><p><strong>Interpretasi.</strong> Di sel teks, tulis dua-tiga kalimat: kecamatan mana yang rata-rata SMP-nya paling rendah dan paling tinggi, dan apa maknanya bagi pemerataan fasilitas pendidikan dasar di Bandar Lampung.</p></li>
+<li><p><strong>Tutup dan uji.</strong> Tutup koneksi, lalu jalankan <strong>Restart <em>kernel</em> &amp; Run All</strong> — seluruh sel harus lolos berurutan.</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Disalin!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Disalin!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./modul-02.html" class="pagination-link" aria-label="Pengolahan Data Terstruktur dengan Pandas">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan Pandas</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./modul-04.html" class="pagination-link" aria-label="*Exploratory Data Analysis* (EDA)">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title"><em>Exploratory Data Analysis</em> (EDA)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

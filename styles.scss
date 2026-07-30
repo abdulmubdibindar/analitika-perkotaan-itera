@@ -1,0 +1,73 @@
+/*-- scss:defaults --*/
+
+// Fon sesuai spec buku ajar: Playfair Display (heading), Carlito (tubuh),
+// JetBrains Mono (kode). Diimpor dari Google Fonts agar berfungsi di GitHub Pages.
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
+$font-family-sans-serif: "Carlito", "Calibri", sans-serif;
+$headings-font-family: "Playfair Display", serif;
+$font-family-monospace: "JetBrains Mono", monospace;
+
+$headings-font-weight: 700;
+
+// Skala heading mengikuti PDF (20/18/16/14 pt atas body 11 pt)
+$h1-font-size: 1.818rem;
+$h2-font-size: 1.636rem;
+$h3-font-size: 1.455rem;
+$h4-font-size: 1.273rem;
+$h5-font-size: 1.273rem;
+$h6-font-size: 1.273rem;
+
+/*-- scss:rules --*/
+
+// Paragraf isi rata kiri-kanan, konsisten dengan PDF
+main p {
+  text-align: justify;
+}
+
+// Placeholder teks abu-abu untuk bagian yang akan diisi tim dosen.
+// Catatan: jangan memakai nama kelas .placeholder — bentrok dengan
+// komponen loading-skeleton Bootstrap yang mengubah isi jadi balok abu-abu.
+.teks-placeholder {
+  color: #8a8a8a;
+  font-style: italic;
+}
+
+// Sidebar judul bab tetap memakai fon tubuh agar mudah dipindai
+.sidebar-item .menu-text {
+  font-family: $font-family-sans-serif;
+}
+
+// Sel kode sedikit lebih kecil supaya baris panjang tetap muat
+// Ligatur dimatikan agar != tidak dirender sebagai satu glyph ≠
+// (JetBrains Mono memakai calt, konsisten dengan typst-template.typ)
+pre code {
+  font-size: 0.9em;
+}
+code, pre, kbd, samp {
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+
+// Judul callout otomatis bold
+.callout-title {
+  font-weight: bold !important;
+}
+// Empat callout standar modul (lihat spec.md, "Pemformatan Callout"):
+//   note "Pengetahuan Komputer", tip "Pengetahuan VS Code", dan
+//   warning "Penting!" memakai ikon bawaan Quarto; hanya
+//   note "Konsep Python" yang ikonnya di-override menjadi logo Python.
+// Selektor prefix (^=) dipertahankan agar judul lama "Konsep Python: X"
+// yang belum dimigrasikan tetap berikon benar.
+div.callout[title^="Konsep Python"] {
+  .callout-icon-container .callout-icon::before {
+    background-image: url('assets/python-logo.svg') !important;
+    background-size: 1.5rem 1.5rem !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+  }
+}

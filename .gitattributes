@@ -1,0 +1,49 @@
+# Biarkan git menebak berkas teks dan menormalkan akhir barisnya menjadi LF
+# di dalam repo. Salinan di direktori kerja tetap memakai akhir baris asli
+# sistem, jadi menyunting di Windows tidak terganggu.
+* text=auto
+
+# ---------------------------------------------------------------------------
+# Sumber modul: paksa LF supaya diff di GitHub tidak berisik
+# ---------------------------------------------------------------------------
+*.ipynb  text eol=lf
+*.qmd    text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.scss   text eol=lf
+*.css    text eol=lf
+*.typ    text eol=lf
+*.py     text eol=lf
+*.html   text eol=lf
+*.json   text eol=lf
+*.js     text eol=lf
+*.svg    text eol=lf
+
+# Skrip PowerShell justru aman dengan CRLF di Windows
+*.ps1    text eol=crlf
+
+# ---------------------------------------------------------------------------
+# Biner: jangan pernah dinormalkan
+# ---------------------------------------------------------------------------
+# Font di assets/fonts/ akan rusak bila git menyentuh akhir barisnya.
+*.ttf    binary
+*.otf    binary
+*.woff   binary
+*.woff2  binary
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.pdf    binary
+*.xlsx   binary
+*.sqlite binary
+
+# ---------------------------------------------------------------------------
+# Tampilan di GitHub
+# ---------------------------------------------------------------------------
+# docs/ adalah keluaran render, bukan tulisan tangan. Menandainya sebagai
+# linguist-generated membuat diff-nya terlipat dan tidak ikut dihitung
+# sebagai statistik bahasa repo.
+docs/** linguist-generated=true

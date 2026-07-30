@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="id" xml:lang="id"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Pengolahan Data Terstruktur dengan Pandas – Analitika Perkotaan</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./modul-03.html" rel="next">
+<link href="./modul-01.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7fde21fbbed941212ff23fc867eda995.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-4b3ae02ca3d2c990793b4a58c5ee5acf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7fde21fbbed941212ff23fc867eda995.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-434d7e7f46c20ea3b5dec979eeaa14b2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-434d7e7f46c20ea3b5dec979eeaa14b2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-434d7e7f46c20ea3b5dec979eeaa14b2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Tidak ada hasil",
+    "search-matching-documents-text": "dokumen cocok",
+    "search-copy-link-title": "Salin tautan untuk mencari",
+    "search-hide-matches-text": "Sembunyikan kecocokan lainnya",
+    "search-more-match-text": "kecocokan lainnya di dokumen ini",
+    "search-more-matches-text": "kecocokan lainnya di dokumen ini",
+    "search-clear-button-title": "Hapus",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Batal",
+    "search-submit-button-title": "Kirim",
+    "search-label": "Mencari"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alihkan bilah sisi" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./modul-02.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan Pandas</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alihkan bilah sisi" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Mencari" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Analitika Perkotaan</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Mencari"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kata Pengantar</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Fondasi Lingkungan Kerja: Python <em>Offline</em>, Terminal, dan Direktori Proyek</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-02.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan Pandas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan SQL (SQLite)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title"><em>Exploratory Data Analysis</em> (EDA)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Visualisasi Data dengan Matplotlib dan Seaborn</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Daftar Isi</h2>
+   
+  <ul>
+  <li><a href="#pendahuluan" id="toc-pendahuluan" class="nav-link active" data-scroll-target="#pendahuluan"><span class="header-section-number">2.1</span> Pendahuluan</a></li>
+  <li><a href="#gambaran-umum-kasus" id="toc-gambaran-umum-kasus" class="nav-link" data-scroll-target="#gambaran-umum-kasus"><span class="header-section-number">2.2</span> Gambaran Umum Kasus</a></li>
+  <li><a href="#instruksi" id="toc-instruksi" class="nav-link" data-scroll-target="#instruksi"><span class="header-section-number">2.3</span> Instruksi</a>
+  <ul class="collapse">
+  <li><a href="#jembatan-jupyter-membuktikan-perilaku-sel-dan-state-bersama" id="toc-jembatan-jupyter-membuktikan-perilaku-sel-dan-state-bersama" class="nav-link" data-scroll-target="#jembatan-jupyter-membuktikan-perilaku-sel-dan-state-bersama"><span class="header-section-number">2.3.1</span> Jembatan Jupyter: Membuktikan Perilaku Sel dan <strong>State</strong> Bersama</a></li>
+  <li><a href="#eksperimen-papan-tulis-mengapa-urutan-eksekusi-sel-sangat-menentukan-hasil" id="toc-eksperimen-papan-tulis-mengapa-urutan-eksekusi-sel-sangat-menentukan-hasil" class="nav-link" data-scroll-target="#eksperimen-papan-tulis-mengapa-urutan-eksekusi-sel-sangat-menentukan-hasil"><span class="header-section-number">2.3.2</span> Eksperimen Papan Tulis: Mengapa Urutan Eksekusi Sel Sangat Menentukan Hasil</a></li>
+  <li><a href="#membuka-rekap-data-membaca-file-csv-dengan-pandas" id="toc-membuka-rekap-data-membaca-file-csv-dengan-pandas" class="nav-link" data-scroll-target="#membuka-rekap-data-membaca-file-csv-dengan-pandas"><span class="header-section-number">2.3.3</span> Membuka Rekap Data: Membaca File CSV dengan Pandas</a></li>
+  <li><a href="#mengenal-struktur-tabel-anatomi-baris-kolom-dan-tipe-data-dataframe" id="toc-mengenal-struktur-tabel-anatomi-baris-kolom-dan-tipe-data-dataframe" class="nav-link" data-scroll-target="#mengenal-struktur-tabel-anatomi-baris-kolom-dan-tipe-data-dataframe"><span class="header-section-number">2.3.4</span> Mengenal Struktur Tabel: Anatomi Baris, Kolom, dan Tipe Data <em>DataFrame</em></a></li>
+  <li><a href="#kelurahan-vs-kecamatan-membedakan-unit-amatan-dan-unit-analisis" id="toc-kelurahan-vs-kecamatan-membedakan-unit-amatan-dan-unit-analisis" class="nav-link" data-scroll-target="#kelurahan-vs-kecamatan-membedakan-unit-amatan-dan-unit-analisis"><span class="header-section-number">2.3.5</span> Kelurahan vs Kecamatan: Membedakan Unit Amatan dan Unit Analisis</a></li>
+  <li><a href="#merapikan-tabel-membuat-menyusun-ulang-dan-menghapus-kolom" id="toc-merapikan-tabel-membuat-menyusun-ulang-dan-menghapus-kolom" class="nav-link" data-scroll-target="#merapikan-tabel-membuat-menyusun-ulang-dan-menghapus-kolom"><span class="header-section-number">2.3.6</span> Merapikan Tabel: Membuat, Menyusun Ulang, dan Menghapus Kolom</a></li>
+  <li><a href="#menyaring-baris-filtrasi-data-kelurahan-berdasarkan-kriteria-tertentu" id="toc-menyaring-baris-filtrasi-data-kelurahan-berdasarkan-kriteria-tertentu" class="nav-link" data-scroll-target="#menyaring-baris-filtrasi-data-kelurahan-berdasarkan-kriteria-tertentu"><span class="header-section-number">2.3.7</span> Menyaring Baris: Filtrasi Data Kelurahan Berdasarkan Kriteria Tertentu</a></li>
+  </ul></li>
+  <li><a href="#latihan-mandiri" id="toc-latihan-mandiri" class="nav-link" data-scroll-target="#latihan-mandiri"><span class="header-section-number">2.4</span> Latihan Mandiri</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-modul-2" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan Pandas</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-important callout-titled" title="Sub-CPMK Pertemuan Ini">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Penting</span>Sub-CPMK Pertemuan Ini
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mahasiswa mampu mendemonstrasikan pengolahan data terstruktur dasar menggunakan Pandas, mengidentifikasi unit amatan dan unit analisis dari dataset perkotaan, serta memecahkan masalah kebingungan urutan eksekusi sel (<strong>state</strong> bersama) pada Jupyter Notebook.</p>
+</div>
+</div>
+<section id="pendahuluan" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="pendahuluan"><span class="header-section-number">2.1</span> Pendahuluan</h2>
+<p><span class="teks-placeholder" style="color: #8a8a8a;">&lt;masukkan narasi yang menceritakan ‘big why’ mengelola data perkotaan yang terstruktur di sini&gt;</span></p>
+</section>
+<section id="gambaran-umum-kasus" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="gambaran-umum-kasus"><span class="header-section-number">2.2</span> Gambaran Umum Kasus</h2>
+<p>Pemerintah Kota Bandar Lampung hendak mengalokasikan bantuan pembangunan, dan pertanyaan pertamanya sederhana: kelurahan mana yang paling membutuhkan? Untuk menjawabnya, kita sebagai perencana memerlukan profil sosio-demografi setiap kelurahan — berapa kepadatan penduduknya, seberapa lengkap fasilitas pendidikan usia dininya, dan seterusnya. Bahan bakunya bersumber dari data <strong>PODES 2021</strong> (BPS) Kota Bandar Lampung. Data tersebut disimpan dalam format CSV.</p>
+<p>Di studio, data seperti ini biasa kita rekap secara mandiri ke dalam tabel Excel saat melakukan kompilasi data. Kali ini kita berkenalan dengan <strong>Pandas</strong>, <em>library</em> Python untuk mengolah tabel rekapitulasi semacam itu. Namun sebelum menyentuh data, kita tuntaskan dulu janji Modul 1: <strong>membuktikan cara kerja sel Jupyter Notebook</strong> yang perilakunya berlawanan dengan dua berkas <code>.py</code> kita. Setelah jembatan itu terlewati, kita akan membaca rekap data CSV ke dalam Pandas, mengenali anatomi tabelnya, membedakan kelurahan sebagai <em>unit amatan</em> dari kecamatan sebagai <em>unit analisis</em>, merapikan tabel dengan membuat-menyusun-menghapus kolom, dan menutup dengan menyaring kelurahan berdasarkan kriteria untuk menemukan kandidat prioritas bantuan.</p>
+</section>
+<section id="instruksi" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="instruksi"><span class="header-section-number">2.3</span> Instruksi</h2>
+<p>Buat notebook baru <code>modul/modul-02.ipynb</code> di direktori proyek Anda, sambungkan ke <em>kernel</em> <code>analitika-perkotaan</code>, dan kerjakan seluruh instruksi di dalamnya.</p>
+<section id="jembatan-jupyter-membuktikan-perilaku-sel-dan-state-bersama" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="jembatan-jupyter-membuktikan-perilaku-sel-dan-state-bersama"><span class="header-section-number">2.3.1</span> Jembatan Jupyter: Membuktikan Perilaku Sel dan <strong>State</strong> Bersama</h3>
+<p>Di Modul 1, <code>hitung_pincang.py</code> gagal karena setiap eksekusi <code>python berkas.py</code> adalah sesi kerja baru yang tidak mengingat apa pun. Sekarang kita reproduksi kasus yang sama di notebook — tetapi kali ini “berkas pincang”-nya kita pecah menjadi <strong>dua sel</strong>. Jalankan sel pertama:</p>
+<div id="159a0f1d" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:54.436204Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:54.435204Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:54.440480Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:54.440480Z&quot;}}" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>luas_wilayah_km2 <span class="op">=</span> <span class="fl">197.22</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>jumlah_penduduk <span class="op">=</span> <span class="dv">1166066</span></span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Lalu jalankan sel kedua, yang hanya berisi perhitungan — persis si <code>hitung_pincang.py</code>:</p>
+<div id="9a038d6b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:54.442556Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:54.442556Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:54.448427Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:54.448427Z&quot;}}" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>kepadatan <span class="op">=</span> jumlah_penduduk <span class="op">/</span> luas_wilayah_km2</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Kepadatan penduduk: </span><span class="sc">{</span>kepadatan<span class="sc">:.0f}</span><span class="ss"> jiwa per km persegi"</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Kepadatan penduduk: 5913 jiwa per km persegi</code></pre>
+</div>
+</div>
+<p><strong>Berhasil!</strong> Padahal sel kedua tidak mendefinisikan variabelnya sendiri. Inilah perbedaan mendasarnya: sel-sel notebook <strong>bukan</strong> berkas-berkas terpisah, melainkan potongan-potongan percakapan dalam <strong>satu sesi yang sama</strong> — seperti saat kita mengetik berurutan di mode interaktif <code>&gt;&gt;&gt;</code> kemarin, hanya saja kini tiap potongannya tersimpan rapi.</p>
+<p>Analogi studionya: <strong>kernel</strong> adalah <strong>papan tulis studio</strong> tempat kita menulis bersama. Di sel pertama, kita menuliskan dua angka di papan; di sel kedua kita tinggal menoleh ke papan yang sama untuk memakainya tanpa harus menulis ulang. Segala coretan yang telah kita tulis di papan — variabel yang pernah kita isi — akan tetap bertahan di sana dan siap kita gunakan di sel mana pun. Kondisi papan tulis pada satu waktu tertentu itulah yang disebut dengan ****state**** yang <strong>dibagi bersama</strong> oleh semua sel.</p>
+</section>
+<section id="eksperimen-papan-tulis-mengapa-urutan-eksekusi-sel-sangat-menentukan-hasil" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="eksperimen-papan-tulis-mengapa-urutan-eksekusi-sel-sangat-menentukan-hasil"><span class="header-section-number">2.3.2</span> Eksperimen Papan Tulis: Mengapa Urutan Eksekusi Sel Sangat Menentukan Hasil</h3>
+<p>Papan tulis bersama itu nyaman, tetapi menyimpan satu jebakan yang membingungkan hampir semua pemula. Mari kita masuk ke jebakannya dengan sadar. Jalankan sel berikut, yang mengganti isi variabel luas dengan angka yang jelas-jelas salah:</p>
+<div id="b8a772af" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:54.451432Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:54.451432Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:54.455429Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:54.455429Z&quot;}}" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>luas_wilayah_km2 <span class="op">=</span> <span class="dv">20</span></span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Sekarang <strong>kembalilah ke sel perhitungan kepadatan di atas dan jalankan ulang sel itu</strong> (klik selnya, lalu <code>Shift+Enter</code>). Hasilnya melonjak menjadi lebih dari 58 ribu jiwa per km persegi — karena perhitungan menoleh ke papan tulis dan menemukan angka <code>20</code> yang baru. Di modul ini kita tuliskan ulang perhitungannya sebagai sel berikut agar lonjakannya terlihat:</p>
+<div id="80aa8e21" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:54.458435Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:54.458435Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:54.462857Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:54.462857Z&quot;}}" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>kepadatan <span class="op">=</span> jumlah_penduduk <span class="op">/</span> luas_wilayah_km2</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Kepadatan penduduk: </span><span class="sc">{</span>kepadatan<span class="sc">:.0f}</span><span class="ss"> jiwa per km persegi"</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Kepadatan penduduk: 58303 jiwa per km persegi</code></pre>
+</div>
+</div>
+<p>Perhatikan dua hal:</p>
+<ol type="1">
+<li><p>Hasil sebuah sel <strong>tidak ditentukan oleh posisinya di halaman</strong>, melainkan oleh <strong>urutan eksekusinya</strong>. Sel yang tampak lebih atas bisa saja dijalankan belakangan dan memakai nilai yang lebih baru.</p></li>
+<li><p>Angka dalam tanda kurung siku di kiri sel (misalnya <code>[5]</code>) adalah <strong>nomor antrean eksekusi</strong>. Kalau nomornya melompat-lompat tidak berurutan dari atas ke bawah, hasil yang tampil bisa jadi berasal dari papan tulis yang keadaannya sudah berubah.</p></li>
+</ol>
+<div class="callout callout-style-default callout-warning callout-titled" title="Penting!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Penting!
+</div>
+</div>
+<section id="papan-tulis-tidak-menghapus-dirinya-sendiri" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="papan-tulis-tidak-menghapus-dirinya-sendiri">Papan Tulis Tidak Menghapus Dirinya Sendiri</h3>
+<p>Coretan di papan tulis studio akan bertahan sampai kita sendiri menghapusnya — meski kita sudah selesai bekerja. Begitu pula variabel di <strong>kernel</strong>: sekali terisi, ia bertahan dan memengaruhi sel mana pun yang dijalankan setelahnya, <strong>meskipun sel yang mengisinya sudah kita hapus dari notebook</strong>.</p>
+<p>Karena itu, biasakan ritual studio ini: sebelum kita mengumpulkan atau mempercayai hasil akhir notebook kita, jalankan <strong>Restart <em>kernel</em> &amp; Run All</strong> (hapus papan tulis, lalu kerjakan seluruh sel berurutan dari atas). Jika ada sel yang gagal, berarti notebook Anda belum lengkap-mandiri secara berurutan — persis prinsip berkas <code>.py</code> di Modul 1, kini dalam versi notebook.</p>
+</section>
+</div>
+<p>Sebelum lanjut, kembalikan papan tulis ke angka yang benar:</p>
+<div id="955fbb27" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:54.464977Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:54.464977Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:54.469302Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:54.469302Z&quot;}}" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>luas_wilayah_km2 <span class="op">=</span> <span class="fl">197.22</span></span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="membuka-rekap-data-membaca-file-csv-dengan-pandas" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="membuka-rekap-data-membaca-file-csv-dengan-pandas"><span class="header-section-number">2.3.3</span> Membuka Rekap Data: Membaca File CSV dengan Pandas</h3>
+<p>Sekarang kasus intinya. Data PODES kelurahan Bandar Lampung tersimpan sebagai berkas <strong>CSV</strong> (<em>comma-separated values</em>): berkas teks biasa yang tiap barisnya adalah satu catatan dan tiap kolomnya dipisahkan koma — bentuk paling sederhana dari <strong>data terstruktur</strong>, data yang tertata dalam baris dan kolom bermakna tetap. Baris pertamanya berisi nama-nama kolom. Kalau dibuka dengan Notepad, isinya kira-kira:</p>
+<pre><code>kode_prov,nama_prov,kode_kab,nama_kab,kode_kec,nama_kec,kode_des,nama_des,...
+18,Lampung,71,Kota Bandar Lampung,10,Teluk Betung Barat,5,Bakung,...</code></pre>
+<p>Membaca teks seperti itu dengan mata tentu melelahkan. Di sinilah <strong>Pandas</strong> bekerja: ia memuat CSV menjadi tabel rekapitulasi yang rapi — persis lembar rekap kompilasi data studio di Excel — yang di Pandas disebut <strong><em>DataFrame</em></strong>.</p>
+<p>Berkas kita berisi 34 kolom, padahal pertemuan ini hanya butuh sebagian. Maka sebelum membaca, kita siapkan dua variabel penampung: <code>path_data</code> untuk alamat berkasnya (ingat, notebook kita berada di folder <code>modul</code>, sehingga <em>path</em> relatifnya naik satu tingkat dulu dengan <code>..</code>) dan <code>kolom_pilihan</code> untuk daftar kolom yang ingin dibaca. Dengan begitu, perintah bacanya sendiri tetap pendek:</p>
+<div id="d7216eba" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:54.472220Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:54.472220Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:57.210537Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:57.210537Z&quot;}}" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>path_data <span class="op">=</span> <span class="st">"../dataset-ganjil-2026-2027/bdl_kelurahan.csv"</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>kolom_pilihan <span class="op">=</span> [<span class="st">"nama_kec"</span>, <span class="st">"nama_des"</span>, <span class="st">"status_daerah"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"kepadatan_pddk"</span>, <span class="st">"jml_tk_negeri"</span>, <span class="st">"jml_tk_swasta"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"jml_ra_ba_negeri"</span>, <span class="st">"jml_ra_ba_swasta"</span>]</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(path_data, usecols<span class="op">=</span>kolom_pilihan)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>             nama_kec            nama_des  status_daerah  jml_tk_negeri  \
+0  Teluk Betung Barat              Bakung              1              0   
+1  Teluk Betung Barat             Kuripan              1              0   
+2  Teluk Betung Barat  Negeri Olok Gading              1              0   
+3  Teluk Betung Barat         Sukarame Ii              2              0   
+4  Teluk Betung Barat          Batu Putuk              1              0   
+
+   jml_tk_swasta  jml_ra_ba_negeri  jml_ra_ba_swasta  kepadatan_pddk  
+0              2                 0                 0            6479  
+1              0                 0                 0           16321  
+2              1                 0                 0            7761  
+3              3                 0                 0            1514  
+4              1                 0                 0            2214  </code></pre>
+</div>
+</div>
+<p>Tiga baris pekerjaan terjadi di sana. <code>import pandas as pd</code> memanggil <em>library</em> Pandas dari rak <strong>environment</strong> kita dan memberinya nama panggilan pendek <code>pd</code> — cukup sekali di awal notebook. <code>pd.read_csv(...)</code> membaca berkas pada <code>path_data</code>, mengambil hanya kolom-kolom dalam <code>kolom_pilihan</code> (lewat <code>usecols=</code>), lalu hasilnya kita tampung di variabel <code>df</code>. Terakhir, <code>df.head()</code> mengintip <strong>lima baris pertama</strong> tabel untuk memastikan bacaan kita benar.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Konsep Python">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Konsep Python
+</div>
+</div>
+<section id="tipe-data-list" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="tipe-data-list">Tipe Data <em>list</em></h3>
+<p><code>kolom_pilihan</code> adalah sebuah <strong><em>list</em></strong>: tipe data yang menampung <strong>banyak nilai sekaligus dalam satu kotak, berurutan</strong>. Penulisannya memakai kurung siku, dengan koma sebagai pemisah: <code>["nama_kec", "nama_des", ...]</code>. Kalau variabel biasa adalah satu kotak berlabel, <strong>list</strong> adalah <strong>rak berlabel yang isinya bernomor urut</strong>.</p>
+<p>Nomor urut itu disebut <strong>indeks</strong>, dan — ini kekhasan Python — <strong>dihitung mulai dari 0</strong>: <code>kolom_pilihan[0]</code> berisi <code>"nama_kec"</code>, <code>kolom_pilihan[1]</code> berisi <code>"nama_des"</code>, dan seterusnya. Panjang <strong>list</strong> bisa ditanyakan dengan <code>len(kolom_pilihan)</code>.</p>
+<p><strong>list</strong> akan sangat sering kita pakai untuk menampung daftar nama kolom seperti ini — daripada mengetik daftar panjang berulang-ulang di banyak perintah, kita tulis sekali di satu variabel lalu sebut labelnya.</p>
+</section>
+</div>
+</section>
+<section id="mengenal-struktur-tabel-anatomi-baris-kolom-dan-tipe-data-dataframe" class="level3" data-number="2.3.4">
+<h3 data-number="2.3.4" class="anchored" data-anchor-id="mengenal-struktur-tabel-anatomi-baris-kolom-dan-tipe-data-dataframe"><span class="header-section-number">2.3.4</span> Mengenal Struktur Tabel: Anatomi Baris, Kolom, dan Tipe Data <em>DataFrame</em></h3>
+<p>Rekap data yang baru tiba di studio selalu kita periksa dulu kelengkapannya sebelum dipakai. Untuk <em>DataFrame</em>, pemeriksaan pertamanya adalah <code>info()</code>:</p>
+<div id="54f2b0da" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:57.214690Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:57.214690Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:57.240819Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:57.240819Z&quot;}}" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df.info()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 126 entries, 0 to 125
+Data columns (total 8 columns):
+ #   Column            Non-Null Count  Dtype 
+---  ------            --------------  ----- 
+ 0   nama_kec          126 non-null    object
+ 1   nama_des          126 non-null    object
+ 2   status_daerah     126 non-null    int64 
+ 3   jml_tk_negeri     126 non-null    int64 
+ 4   jml_tk_swasta     126 non-null    int64 
+ 5   jml_ra_ba_negeri  126 non-null    int64 
+ 6   jml_ra_ba_swasta  126 non-null    int64 
+ 7   kepadatan_pddk    126 non-null    int64 
+dtypes: int64(6), object(2)
+memory usage: 8.0+ KB</code></pre>
+</div>
+</div>
+<p>Laporan itu padat informasi. Bacalah dari atas:</p>
+<ul>
+<li><p><code>126 entries</code> — tabel berisi <strong>126 baris</strong>, dan setiap baris adalah <strong>satu kelurahan</strong>. Di sinilah bedanya dengan tabel Excel bebas: dalam data terstruktur, satu baris selalu mewakili satu satuan pencatatan yang sama.</p></li>
+<li><p>Daftar kolom beserta <code>Non-Null Count</code> — berapa baris yang <strong>terisi</strong> di tiap kolom. Semuanya <code>126 non-null</code>, artinya tidak ada data kosong pada kolom-kolom pilihan kita (kemewahan yang tidak selalu terjadi; menangani data kosong adalah porsi Modul 4).</p></li>
+<li><p><code>Dtype</code> — <strong>tipe data</strong> tiap kolom, saudara dari tipe data skalar di Modul 1: <code>int64</code> untuk bilangan bulat, <code>float64</code> untuk bilangan berkoma, dan <code>object</code> untuk teks/string seperti nama kecamatan.</p></li>
+</ul>
+<p>Untuk kolom-kolom angka, kita bisa langsung meminta ringkasan statistiknya:</p>
+<div id="336ae7a2" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:57.240819Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:57.240819Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:57.275008Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:57.275008Z&quot;}}" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>       status_daerah  jml_tk_negeri  jml_tk_swasta  jml_ra_ba_negeri  \
+count     126.000000     126.000000     126.000000             126.0   
+mean        1.015873       0.103175       2.595238               0.0   
+std         0.125483       0.330560       2.075297               0.0   
+min         1.000000       0.000000       0.000000               0.0   
+25%         1.000000       0.000000       1.000000               0.0   
+50%         1.000000       0.000000       2.000000               0.0   
+75%         1.000000       0.000000       4.000000               0.0   
+max         2.000000       2.000000      10.000000               0.0   
+
+       jml_ra_ba_swasta  kepadatan_pddk  
+count        126.000000      126.000000  
+mean           0.269841     9431.825397  
+std            0.662271     8428.116609  
+min            0.000000      627.000000  
+25%            0.000000     3466.750000  
+50%            0.000000     6450.500000  
+75%            0.000000    12693.500000  
+max            4.000000    43907.000000  </code></pre>
+</div>
+</div>
+<p><code>describe()</code> menghitung sekaligus: jumlah data (<code>count</code>), rata-rata (<code>mean</code>), simpangan baku (<code>std</code>), nilai terkecil-terbesar (<code>min</code>, <code>max</code>), dan kuartil (<code>25%</code>, <code>50%</code>, <code>75%</code>). Dari satu tabel ini saja sudah terbaca, misalnya, betapa timpangnya kepadatan penduduk antar-kelurahan: ada kelurahan yang hanya ratusan jiwa per km², ada yang lebih dari 40 ribu. Pendalaman statistik deskriptif semacam ini adalah menu utama Modul 4 — hari ini cukup berkenalan.</p>
+</section>
+<section id="kelurahan-vs-kecamatan-membedakan-unit-amatan-dan-unit-analisis" class="level3" data-number="2.3.5">
+<h3 data-number="2.3.5" class="anchored" data-anchor-id="kelurahan-vs-kecamatan-membedakan-unit-amatan-dan-unit-analisis"><span class="header-section-number">2.3.5</span> Kelurahan vs Kecamatan: Membedakan Unit Amatan dan Unit Analisis</h3>
+<p>Perhatikan lagi: setiap baris tabel kita adalah satu <strong>kelurahan</strong> — pada level itulah BPS mencatat datanya. Dalam bahasa metodologi, kelurahan adalah <strong>unit amatan</strong> (<em>unit of observation</em>) dataset ini: satuan tempat data dicatat, seperti satu lembar kuesioner terisi untuk satu kelurahan.</p>
+<p>Namun pertanyaan perencanaan tidak selalu dijawab pada level pencatatan. Ketika pimpinan bertanya “kecamatan mana yang paling minim fasilitas PAUD?”, kesimpulannya diambil pada level <strong>kecamatan</strong> — itulah <strong>unit analisis</strong> (<em>unit of analysis</em>): satuan tempat kesimpulan dibuat, seperti lembar rekapitulasi per wilayah yang merangkum tumpukan kuesioner. Unit amatan dan unit analisis boleh sama, boleh berbeda; yang fatal adalah tidak sadar sedang bekerja di level yang mana.</p>
+<p>Mari kenali kedua level itu di data kita. Satu kolom di <em>DataFrame</em> dipanggil dengan <code>df["nama_kolom"]</code>, dan <code>nunique()</code> menghitung banyaknya <strong>nilai unik</strong> (nilai yang berbeda-beda) di dalamnya:</p>
+<div id="82d5002f" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:57.279013Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:57.279013Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:57.285129Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:57.285129Z&quot;}}" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Jumlah kelurahan (unit amatan) : </span><span class="sc">{</span>df[<span class="st">'nama_des'</span>]<span class="sc">.</span>nunique()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Jumlah kecamatan               : </span><span class="sc">{</span>df[<span class="st">'nama_kec'</span>]<span class="sc">.</span>nunique()<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Jumlah kelurahan (unit amatan) : 126
+Jumlah kecamatan               : 20</code></pre>
+</div>
+</div>
+<p>126 kelurahan tersebar di 20 kecamatan. Lalu berapa kelurahan yang dinaungi masing-masing kecamatan? <code>value_counts()</code> menghitung <strong>frekuensi kemunculan</strong> tiap nilai pada sebuah kolom — alat andalan untuk meringkas <strong>data kategorikal</strong> (data berupa golongan/kategori, bukan angka hitungan):</p>
+<div id="9365e888" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:57.289137Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:57.288135Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:57.297152Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:57.297152Z&quot;}}" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"nama_kec"</span>].value_counts()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>nama_kec
+Kemiling                9
+Panjang                 8
+Tanjung Karang Barat    7
+Sukabumi                7
+Kedamaian               7
+Rajabasa                7
+Tanjung Karang Pusat    7
+Kedaton                 7
+Sukarame                6
+Labuhan Ratu            6
+Way Halim               6
+Telukbetung Timur       6
+Enggal                  6
+Teluk Betung Utara      6
+Teluk Betung Selatan    6
+Langkapura              5
+Tanjung Senang          5
+Tanjung Karang Timur    5
+Bumi Waras              5
+Teluk Betung Barat      5
+Name: count, dtype: int64</code></pre>
+</div>
+</div>
+<p>Tabel kecil itu sudah merupakan rekapitulasi pada unit analisis kecamatan: Teluk Betung Selatan menaungi paling banyak kelurahan, dan seterusnya. Simpan baik-baik <code>value_counts()</code> di ingatan — di Latihan Mandiri ia akan dipakai untuk meringkas kategori yang lebih bermakna sosial-ekonomi, dan di Modul 3 kita akan membuat rekapitulasi per kecamatan yang lebih kaya menggunakan SQL.</p>
+</section>
+<section id="merapikan-tabel-membuat-menyusun-ulang-dan-menghapus-kolom" class="level3" data-number="2.3.6">
+<h3 data-number="2.3.6" class="anchored" data-anchor-id="merapikan-tabel-membuat-menyusun-ulang-dan-menghapus-kolom"><span class="header-section-number">2.3.6</span> Merapikan Tabel: Membuat, Menyusun Ulang, dan Menghapus Kolom</h3>
+<p>Fasilitas pendidikan usia dini di data kita terpecah menjadi empat kolom: TK negeri, TK swasta, RA/BA negeri, dan RA/BA swasta (RA/BA adalah <em>raudatul athfal</em>/<em>bustanul athfal</em>, PAUD di bawah Kemenag). Untuk pertanyaan alokasi bantuan, yang lebih berguna adalah <strong>totalnya</strong>. Di lembar rekap studio, kita akan menambahkan satu kolom jumlahan di ujung tabel — di Pandas pun sama: menugaskan nilai ke nama kolom yang belum ada akan <strong>membuat kolom baru</strong>:</p>
+<div id="f4a0c0cf" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:57.301159Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:57.301159Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:57.314063Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:57.314063Z&quot;}}" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"jml_paud"</span>] <span class="op">=</span> df[<span class="st">"jml_tk_negeri"</span>] <span class="op">+</span> df[<span class="st">"jml_tk_swasta"</span>] <span class="op">+</span> df[<span class="st">"jml_ra_ba_negeri"</span>] <span class="op">+</span> df[<span class="st">"jml_ra_ba_swasta"</span>]</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">3</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>             nama_kec            nama_des  status_daerah  jml_tk_negeri  \
+0  Teluk Betung Barat              Bakung              1              0   
+1  Teluk Betung Barat             Kuripan              1              0   
+2  Teluk Betung Barat  Negeri Olok Gading              1              0   
+
+   jml_tk_swasta  jml_ra_ba_negeri  jml_ra_ba_swasta  kepadatan_pddk  jml_paud  
+0              2                 0                 0            6479         2  
+1              0                 0                 0           16321         0  
+2              1                 0                 0            7761         1  </code></pre>
+</div>
+</div>
+<p>Perhatikan dua hal: penjumlahan antar-kolom bekerja <strong>serentak untuk seluruh 126 baris</strong> tanpa kita menghitung satu-satu, dan kolom baru <code>jml_paud</code> muncul di <strong>ujung kanan</strong> tabel. Posisi di ujung kanan itu kurang enak dibaca — kolom sepenting itu layak berdiri di dekat identitas kelurahan. Menyusun ulang posisi kolom caranya sederhana: sodorkan <strong><em>list</em></strong> berisi urutan kolom yang kita mau (pemakaian ulang konsep <em>list</em> barusan):</p>
+<div id="751d7d0b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:57.317163Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:57.317163Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:57.336102Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:57.336102Z&quot;}}" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>urutan_kolom <span class="op">=</span> [<span class="st">"nama_kec"</span>, <span class="st">"nama_des"</span>, <span class="st">"status_daerah"</span>,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                <span class="st">"kepadatan_pddk"</span>, <span class="st">"jml_paud"</span>,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                <span class="st">"jml_tk_negeri"</span>, <span class="st">"jml_tk_swasta"</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                <span class="st">"jml_ra_ba_negeri"</span>, <span class="st">"jml_ra_ba_swasta"</span>]</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[urutan_kolom]</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">3</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>             nama_kec            nama_des  status_daerah  kepadatan_pddk  \
+0  Teluk Betung Barat              Bakung              1            6479   
+1  Teluk Betung Barat             Kuripan              1           16321   
+2  Teluk Betung Barat  Negeri Olok Gading              1            7761   
+
+   jml_paud  jml_tk_negeri  jml_tk_swasta  jml_ra_ba_negeri  jml_ra_ba_swasta  
+0         2              0              2                 0                 0  
+1         0              0              0                 0                 0  
+2         1              0              1                 0                 0  </code></pre>
+</div>
+</div>
+<p>Terakhir, setelah totalnya ada, empat kolom pecahannya tidak kita perlukan lagi hari ini. Membiarkan kolom tak terpakai membuat tabel lebar dan mata cepat lelah — seperti membiarkan kertas kalkir bekas menumpuk di meja gambar. Kita buang dengan <code>drop()</code>, lagi-lagi lewat variabel <em>list</em> agar rapi:</p>
+<div id="91c5942a" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:57.339138Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:57.339138Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:57.348284Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:57.348284Z&quot;}}" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>kolom_dibuang <span class="op">=</span> [<span class="st">"jml_tk_negeri"</span>, <span class="st">"jml_tk_swasta"</span>, <span class="st">"jml_ra_ba_negeri"</span>, <span class="st">"jml_ra_ba_swasta"</span>]</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop(columns<span class="op">=</span>kolom_dibuang)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">3</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>             nama_kec            nama_des  status_daerah  kepadatan_pddk  \
+0  Teluk Betung Barat              Bakung              1            6479   
+1  Teluk Betung Barat             Kuripan              1           16321   
+2  Teluk Betung Barat  Negeri Olok Gading              1            7761   
+
+   jml_paud  
+0         2  
+1         0  
+2         1  </code></pre>
+</div>
+</div>
+<p>Terakhir, setelah totalnya ada, empat kolom pecahannya tidak kita perlukan lagi hari ini. Membiarkan kolom tak terpakai membuat tabel lebar dan mata cepat lelah — seperti membiarkan kertas kalkir bekas menumpuk di ruang kerja kita. Kita buang dengan <code>drop()</code>, lagi-lagi lewat variabel <strong>list</strong> agar rapi:</p>
+</section>
+<section id="menyaring-baris-filtrasi-data-kelurahan-berdasarkan-kriteria-tertentu" class="level3" data-number="2.3.7">
+<h3 data-number="2.3.7" class="anchored" data-anchor-id="menyaring-baris-filtrasi-data-kelurahan-berdasarkan-kriteria-tertentu"><span class="header-section-number">2.3.7</span> Menyaring Baris: Filtrasi Data Kelurahan Berdasarkan Kriteria Tertentu</h3>
+<p>Tabel sudah rapi; kini saatnya mengajukan pertanyaan sang pemberi kasus: <strong>kelurahan mana yang paling membutuhkan bantuan fasilitas PAUD?</strong> Tafsiran pertama yang paling sederhana: kelurahan yang fasilitas PAUD-nya sangat sedikit — katakanlah satu atau tidak ada sama sekali.</p>
+<p>Menyaring baris di Pandas polanya <code>df[kondisi]</code>: “dari tabel <code>df</code>, ambil baris-baris yang memenuhi kondisi”. Kondisinya kita tulis sebagai perbandingan atas sebuah kolom:</p>
+<div id="a8985b4b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:57.351290Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:57.351290Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:57.361715Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:57.361715Z&quot;}}" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>kelurahan_minim_paud <span class="op">=</span> df[df[<span class="st">"jml_paud"</span>] <span class="op">&lt;=</span> <span class="dv">1</span>]</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Jumlah kelurahan dengan PAUD &lt;= 1: </span><span class="sc">{</span><span class="bu">len</span>(kelurahan_minim_paud)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>kelurahan_minim_paud.head()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Jumlah kelurahan dengan PAUD &lt;= 1: 37</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>             nama_kec            nama_des  status_daerah  kepadatan_pddk  \
+1  Teluk Betung Barat             Kuripan              1           16321   
+2  Teluk Betung Barat  Negeri Olok Gading              1            7761   
+4  Teluk Betung Barat          Batu Putuk              1            2214   
+8   Telukbetung Timur             Perwata              1           21630   
+9   Telukbetung Timur          Way Tataan              1             687   
+
+   jml_paud  
+1         0  
+2         1  
+4         1  
+8         0  
+9         0  </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Konsep Python">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Konsep Python
+</div>
+</div>
+<section id="operator-perbandingan" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="operator-perbandingan">Operator Perbandingan</h3>
+<p><code>df["jml_paud"] &lt;= 1</code> memakai <strong>operator perbandingan</strong> — tanda yang membandingkan dua nilai dan menjawab benar (<code>True</code>) atau salah (<code>False</code>):</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Operator</th>
+<th>Arti</th>
+<th>Contoh</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>==</code></td>
+<td>sama dengan</td>
+<td><code>status == 1</code></td>
+</tr>
+<tr class="even">
+<td><code>!=</code></td>
+<td>tidak sama dengan</td>
+<td><code>nama != "Bakung"</code></td>
+</tr>
+<tr class="odd">
+<td><code>&gt;</code></td>
+<td>lebih besar</td>
+<td><code>kepadatan &gt; 10000</code></td>
+</tr>
+<tr class="even">
+<td><code>&lt;</code></td>
+<td>lebih kecil</td>
+<td><code>luas &lt; 5</code></td>
+</tr>
+<tr class="odd">
+<td><code>&gt;</code></td>
+<td>lebih besar atau sama</td>
+<td><code>jml_paud &gt;= 2</code></td>
+</tr>
+<tr class="even">
+<td><code>&lt;=</code></td>
+<td>lebih kecil atau sama</td>
+<td><code>jml_paud &lt;= 1</code></td>
+</tr>
+</tbody>
+</table>
+<p>Perhatikan: <strong>sama dengan ditulis dua kali</strong> (<code>==</code>), karena tanda <code>=</code> tunggal sudah dipakai untuk penugasan variabel (Modul 1). Menukar keduanya adalah salah ketik yang sangat umum.</p>
+<p>Saat dipakai pada kolom <strong>DataFrame</strong>, perbandingan diuji <strong>serentak ke seluruh baris</strong>, menghasilkan deretan <code>True</code>/<code>False</code> sepanjang tabel — dan <code>df[...]</code> menahan hanya baris-baris yang <code>True</code>. Itulah mekanika di balik penyaringan barusan.</p>
+</section>
+</div>
+<div id="ad6a97e1" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:57.364720Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:57.364720Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:57.378210Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:57.378210Z&quot;}}" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>kriteria_padat <span class="op">=</span> df[<span class="st">"kepadatan_pddk"</span>] <span class="op">&gt;</span> <span class="dv">10000</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>kriteria_minim <span class="op">=</span> df[<span class="st">"jml_paud"</span>] <span class="op">&lt;=</span> <span class="dv">1</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>kelurahan_prioritas <span class="op">=</span> df[kriteria_padat <span class="op">&amp;</span> kriteria_minim]</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Jumlah kelurahan prioritas: </span><span class="sc">{</span><span class="bu">len</span>(kelurahan_prioritas)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>kelurahan_prioritas</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Jumlah kelurahan prioritas: 18</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>                 nama_kec          nama_des  status_daerah  kepadatan_pddk  \
+1      Teluk Betung Barat           Kuripan              1           16321   
+8       Telukbetung Timur           Perwata              1           21630   
+10      Telukbetung Timur  Kota Karang Raya              1           23796   
+11   Teluk Betung Selatan     Gedong Pakuon              1           13067   
+12   Teluk Betung Selatan            Talang              1           19524   
+14   Teluk Betung Selatan      Teluk Betung              1           25011   
+31   Tanjung Karang Timur     Tanjung Agung              1           37717   
+33   Tanjung Karang Timur        Sawah Lama              1           35775   
+34   Tanjung Karang Timur      Sawah Brebes              1           26055   
+51   Tanjung Karang Pusat           Kaliawi              1           25700   
+54   Tanjung Karang Pusat   Kaliawi Persada              1           13159   
+55                 Enggal       Gunung Sari              1           13476   
+56                 Enggal    Tanjung Karang              1           13571   
+86                Kedaton  Sukamenanti Baru              1           20233   
+87                Kedaton        Penengahan              1           21014   
+88                Kedaton   Penengahan Raya              1           11023   
+120             Way Halim        Jagabaya I              1           19406   
+123             Way Halim      Gunung Sulah              1           14823   
+
+     jml_paud  
+1           0  
+8           0  
+10          0  
+11          0  
+12          0  
+14          0  
+31          1  
+33          1  
+34          1  
+51          1  
+54          1  
+55          0  
+56          0  
+86          1  
+87          1  
+88          0  
+120         0  
+123         1  </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Konsep Python">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Konsep Python
+</div>
+</div>
+<section id="operator-boolean-dan" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="operator-boolean-dan">Operator Boolean <code>&amp;</code> dan <code>|</code></h3>
+<p>Untuk menggabungkan dua kondisi, Python menyediakan <strong>operator boolean</strong> (dinamai dari aljabar <em>Boolean</em>, aljabar benar-salah):</p>
+<ul>
+<li><p><code>&amp;</code> berarti <strong>dan</strong> — hasilnya <code>True</code> hanya jika <strong>kedua</strong> kondisi benar.</p></li>
+<li><p><code>|</code> berarti <strong>atau</strong> — hasilnya <code>True</code> jika <strong>salah satu saja</strong> kondisi benar.</p></li>
+</ul>
+<p>Dalam Python murni kata kuncinya <code>and</code> dan <code>or</code>, tetapi <strong>khusus untuk kolom Pandas kita wajib memakai lambang <code>&amp;</code> dan <code>|</code></strong>, karena pengujian dilakukan serentak ke ratusan baris sekaligus. Satu aturan lagi: jika kondisinya ditulis langsung tanpa variabel penampung, tiap kondisi <strong>harus dikurung</strong>, misalnya <code>df[(df["kepadatan_pddk"] &gt; 10000) &amp; (df["jml_paud"] &lt;= 1)]</code> — tanpa kurung, Python salah membaca urutannya. Menampung kondisi ke variabel seperti yang kita lakukan membuat kurung tak diperlukan dan kodenya jauh lebih terbaca.</p>
+</section>
+</div>
+</section>
+</section>
+<section id="latihan-mandiri" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="latihan-mandiri"><span class="header-section-number">2.4</span> Latihan Mandiri</h2>
+<p>Kerjakan di notebook baru <code>modul/latihan-02.ipynb</code> dengan <em>kernel</em> <code>analitika-perkotaan</code>. Alurnya sama persis dengan instruksi di atas; yang berganti hanya kolom yang dipakai — kali ini <strong>pendidikan dasar</strong> (SD dan SMP), ditambah satu kolom kategorikal.</p>
+<ol type="1">
+<li><p><strong>Jembatan sel.</strong> Di dua sel terpisah: sel pertama mendefinisikan dua variabel angka apa saja versi Anda sendiri, sel kedua menghitung sesuatu dari keduanya. Buktikan keduanya berbagi papan tulis, lalu jalankan <strong>Restart <em>kernel</em> &amp; Run All</strong> dan pastikan semuanya tetap berjalan berurutan.</p></li>
+<li><p><strong>Membaca data.</strong> Baca <code>bdl_kelurahan.csv</code> memakai variabel <code>path_data</code> dan <code>kolom_pilihan</code> yang berisi: <code>nama_kec</code>, <code>nama_des</code>, <code>status_daerah</code>, <code>kepadatan_pddk</code>, <code>lap_usaha_sebagian_warga</code>, <code>jml_sd_negeri</code>, <code>jml_sd_swasta</code>, <code>jml_smp_negeri</code>, <code>jml_smp_swasta</code>.</p></li>
+<li><p><strong>Anatomi tabel.</strong> Periksa dengan <code>info()</code> dan <code>describe()</code>. Sebutkan (di sel teks): berapa barisnya, kolom mana saja yang bertipe angka, dan adakah kolom yang datanya kosong.</p></li>
+<li><p><strong>Unit amatan vs unit analisis.</strong> Hitung banyaknya nilai unik kelurahan dan kecamatan, lalu buat rekapitulasi frekuensi <strong>data kategorikal</strong> <code>lap_usaha_sebagian_warga</code> (lapangan usaha sebagian besar warga) dengan <code>value_counts()</code>. Nilainya berupa kode kategori BPS — arti tiap kode dapat dilihat di kamus data PODES 2021 yang dibagikan dosen. Tuliskan satu kalimat: lapangan usaha kode apa yang paling banyak menjadi tumpuan warga kelurahan-kelurahan Bandar Lampung, dan pada unit apa (amatan atau analisis) kesimpulan kalimat Anda itu berdiri?</p></li>
+<li><p><strong>Merapikan tabel.</strong> Buat kolom baru <code>jml_dikdas</code> (jumlah fasilitas pendidikan dasar) dari penjumlahan empat kolom SD/SMP, susun ulang kolom sehingga <code>jml_dikdas</code> berdiri setelah <code>kepadatan_pddk</code>, lalu hapus empat kolom pecahannya memakai variabel <em>list</em>.</p></li>
+<li><p><strong>Menyaring baris.</strong> Temukan <strong>kelurahan prioritas fasilitas pendidikan dasar</strong>: kepadatan penduduk di atas <strong>15.000</strong> jiwa/km² <strong>dan</strong> <code>jml_dikdas</code> paling banyak <strong>2</strong>. Berapa kelurahan yang lolos? Tutup notebook Anda dengan satu paragraf sel teks yang menafsirkan daftar tersebut sebagaimana laporan singkat kepada pimpinan.</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Disalin!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Disalin!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./modul-01.html" class="pagination-link" aria-label="Fondasi Lingkungan Kerja: Python *Offline*, Terminal, dan Direktori Proyek">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Fondasi Lingkungan Kerja: Python <em>Offline</em>, Terminal, dan Direktori Proyek</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./modul-03.html" class="pagination-link" aria-label="Pengolahan Data Terstruktur dengan SQL (SQLite)">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan SQL (SQLite)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

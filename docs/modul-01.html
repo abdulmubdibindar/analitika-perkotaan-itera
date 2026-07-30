@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="id" xml:lang="id"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; Fondasi Lingkungan Kerja: Python Offline, Terminal, dan Direktori Proyek – Analitika Perkotaan</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./modul-02.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7fde21fbbed941212ff23fc867eda995.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-4b3ae02ca3d2c990793b4a58c5ee5acf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7fde21fbbed941212ff23fc867eda995.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-434d7e7f46c20ea3b5dec979eeaa14b2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-434d7e7f46c20ea3b5dec979eeaa14b2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-434d7e7f46c20ea3b5dec979eeaa14b2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Tidak ada hasil",
+    "search-matching-documents-text": "dokumen cocok",
+    "search-copy-link-title": "Salin tautan untuk mencari",
+    "search-hide-matches-text": "Sembunyikan kecocokan lainnya",
+    "search-more-match-text": "kecocokan lainnya di dokumen ini",
+    "search-more-matches-text": "kecocokan lainnya di dokumen ini",
+    "search-clear-button-title": "Hapus",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Batal",
+    "search-submit-button-title": "Kirim",
+    "search-label": "Mencari"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alihkan bilah sisi" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./modul-01.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Fondasi Lingkungan Kerja: Python <em>Offline</em>, Terminal, dan Direktori Proyek</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alihkan bilah sisi" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Mencari" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Analitika Perkotaan</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Mencari"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kata Pengantar</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-01.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Fondasi Lingkungan Kerja: Python <em>Offline</em>, Terminal, dan Direktori Proyek</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan Pandas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan SQL (SQLite)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title"><em>Exploratory Data Analysis</em> (EDA)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modul-05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Visualisasi Data dengan Matplotlib dan Seaborn</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Daftar Isi</h2>
+   
+  <ul>
+  <li><a href="#pendahuluan" id="toc-pendahuluan" class="nav-link active" data-scroll-target="#pendahuluan"><span class="header-section-number">1.1</span> Pendahuluan</a></li>
+  <li><a href="#gambaran-umum-kasus" id="toc-gambaran-umum-kasus" class="nav-link" data-scroll-target="#gambaran-umum-kasus"><span class="header-section-number">1.2</span> Gambaran Umum Kasus</a></li>
+  <li><a href="#instruksi" id="toc-instruksi" class="nav-link" data-scroll-target="#instruksi"><span class="header-section-number">1.3</span> Instruksi</a>
+  <ul class="collapse">
+  <li><a href="#menata-meja-kerja-membuat-struktur-direktori-proyek-studio" id="toc-menata-meja-kerja-membuat-struktur-direktori-proyek-studio" class="nav-link" data-scroll-target="#menata-meja-kerja-membuat-struktur-direktori-proyek-studio"><span class="header-section-number">1.3.1</span> Menata Meja Kerja: Membuat Struktur Direktori Proyek Studio</a></li>
+  <li><a href="#menyiapkan-ruang-kerja-environment-mandiri-dan-instalasi-conda" id="toc-menyiapkan-ruang-kerja-environment-mandiri-dan-instalasi-conda" class="nav-link" data-scroll-target="#menyiapkan-ruang-kerja-environment-mandiri-dan-instalasi-conda"><span class="header-section-number">1.3.2</span> Menyiapkan Ruang Kerja: <em>Environment</em> Mandiri dan Instalasi Conda</a></li>
+  <li><a href="#berbicara-dengan-terminal-menjalankan-perintah-python-interaktif" id="toc-berbicara-dengan-terminal-menjalankan-perintah-python-interaktif" class="nav-link" data-scroll-target="#berbicara-dengan-terminal-menjalankan-perintah-python-interaktif"><span class="header-section-number">1.3.3</span> Berbicara dengan Terminal: Menjalankan Perintah Python Interaktif</a></li>
+  <li><a href="#menulis-catatan-kerja-membuat-skrip-sapa.py-dan-menjalankannya" id="toc-menulis-catatan-kerja-membuat-skrip-sapa.py-dan-menjalankannya" class="nav-link" data-scroll-target="#menulis-catatan-kerja-membuat-skrip-sapa.py-dan-menjalankannya"><span class="header-section-number">1.3.4</span> Menulis Catatan Kerja: Membuat Skrip <code>sapa.py</code> dan Menjalankannya</a></li>
+  <li><a href="#membaca-pesan-kegagalan-tiga-error-paling-umum-dan-debugging-dasar" id="toc-membaca-pesan-kegagalan-tiga-error-paling-umum-dan-debugging-dasar" class="nav-link" data-scroll-target="#membaca-pesan-kegagalan-tiga-error-paling-umum-dan-debugging-dasar"><span class="header-section-number">1.3.5</span> Membaca Pesan Kegagalan: Tiga <em>Error</em> Paling Umum dan <em>Debugging</em> Dasar</a></li>
+  <li><a href="#membandingkan-dua-berkas-mengapa-satu-file-harus-lengkap-mandiri" id="toc-membandingkan-dua-berkas-mengapa-satu-file-harus-lengkap-mandiri" class="nav-link" data-scroll-target="#membandingkan-dua-berkas-mengapa-satu-file-harus-lengkap-mandiri"><span class="header-section-number">1.3.6</span> Membandingkan Dua Berkas: Mengapa Satu File Harus Lengkap-Mandiri</a></li>
+  <li><a href="#menyiapkan-buku-lapangan-membuat-jupyter-notebook-dan-menyambungkan-kernel" id="toc-menyiapkan-buku-lapangan-membuat-jupyter-notebook-dan-menyambungkan-kernel" class="nav-link" data-scroll-target="#menyiapkan-buku-lapangan-membuat-jupyter-notebook-dan-menyambungkan-kernel"><span class="header-section-number">1.3.7</span> Menyiapkan Buku Lapangan: Membuat Jupyter Notebook dan Menyambungkan <em>Kernel</em></a></li>
+  </ul></li>
+  <li><a href="#latihan-mandiri" id="toc-latihan-mandiri" class="nav-link" data-scroll-target="#latihan-mandiri"><span class="header-section-number">1.4</span> Latihan Mandiri</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-modul-1" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Fondasi Lingkungan Kerja: Python <em>Offline</em>, Terminal, dan Direktori Proyek</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-important callout-titled" title="Sub-CPMK Pertemuan Ini">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Penting</span>Sub-CPMK Pertemuan Ini
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mahasiswa mampu menyiapkan lingkungan kerja Python <em>offline</em> (Conda), mengoperasikan perintah terminal dasar, mengelola berkas dengan struktur direktori proyek standar studio, serta membuat dan menyambungkan <em>kernel</em> Jupyter Notebook.</p>
+</div>
+</div>
+<section id="pendahuluan" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="pendahuluan"><span class="header-section-number">1.1</span> Pendahuluan</h2>
+<p><span class="teks-placeholder" style="color: #8a8a8a;">&lt;masukkan narasi yang menceritakan ‘big why’ menyiapkan fondasi lingkungan kerja analitika perkotaan di sini&gt;</span></p>
+</section>
+<section id="gambaran-umum-kasus" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="gambaran-umum-kasus"><span class="header-section-number">1.2</span> Gambaran Umum Kasus</h2>
+<p>Setiap kali sebuah studio perencanaan memulai proyek baru, hal pertama yang dikerjakan bukanlah menggambar. Meja gambar dirapikan, map-map berkas disiapkan dan diberi label, lalu penggaris, pensil, dan kalkulator ditata di rak masing-masing. Tanpa persiapan itu, di tengah proyek kita akan kehilangan berkas, meminjam alat orang lain yang ternyata berbeda ukuran, dan hasil kerja menjadi kacau.</p>
+<p>Pekerjaan analitika perkotaan persis sama. Sebelum menyentuh data Kota Bandar Lampung pada pertemuan-pertemuan berikutnya, dalam modul ini kita merapikan “meja kerja digital” terlebih dahulu. Kita akan menata direktori proyek dengan struktur yang baku, memasang peralatan Python secara <em>offline</em> menggunakan Conda agar tidak bergantung pada koneksi internet yang tidak stabil, belajar berbicara dengan komputer lewat terminal, menulis skrip Python pertama bernama <code>sapa.py</code>, berlatih membaca pesan kegagalan (<em>error</em>) yang paling sering muncul, membuktikan mengapa satu berkas skrip harus lengkap berdiri sendiri, dan menutup pertemuan dengan menyiapkan “buku catatan lapangan” digital kita: Jupyter Notebook yang tersambung ke mesin Python (<em>kernel</em>) milik kita sendiri.</p>
+</section>
+<section id="instruksi" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="instruksi"><span class="header-section-number">1.3</span> Instruksi</h2>
+<section id="menata-meja-kerja-membuat-struktur-direktori-proyek-studio" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="menata-meja-kerja-membuat-struktur-direktori-proyek-studio"><span class="header-section-number">1.3.1</span> Menata Meja Kerja: Membuat Struktur Direktori Proyek Studio</h3>
+<p>Bayangkan hari pertama masuk studio: kita diberi satu laci khusus, lalu di dalamnya kita menyiapkan map-map bertuliskan “data mentah”, “gambar kerja”, dan “laporan”. Di komputer, laci itu bernama <strong>direktori</strong> (sebutan lain untuk <em>folder</em>), dan seluruh pekerjaan satu semester ini akan tinggal di dalam satu direktori induk.</p>
+<p>Ikuti langkah berikut:</p>
+<ol type="1">
+<li>Buka <strong>File Explorer</strong>, lalu masuk ke folder <code>C: → Users → &lt;Nama User Anda&gt; → Documents</code>.</li>
+</ol>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Hindari Folder Downloads
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Jangan gunakan folder seperti <code>Downloads</code> sebagai direktori proyek utama. Berkas di folder tersebut rentan terhapus secara tidak sengaja ketika Anda melakukan pembersihan berkas sementara atau pemeliharaan sistem komputer.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Pengetahuan Komputer">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Pengetahuan Komputer
+</div>
+</div>
+<section id="root-directory-dan-media-penyimpanan-hddssd" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="root-directory-dan-media-penyimpanan-hddssd">Root Directory dan Media Penyimpanan (HDD/SSD)</h3>
+<p>Pangkal teratas dari struktur folder di komputer disebut <strong>direktori akar</strong> (<em>root directory</em>). Di sistem operasi Windows, direktori akar ini direpresentasikan oleh huruf kandar (<em>drive letter</em>) seperti <code>C:</code>, <code>D:</code>, atau <code>E:</code>.</p>
+<p>Kandar <code>C:</code> umumnya merupakan partisi utama pada media penyimpanan permanen tempat sistem operasi Windows terpasang. Komputer modern saat ini umumnya menggunakan <strong>SSD (Solid-State Drive)</strong> yang memiliki kecepatan baca-tulis jauh lebih cepat dibandingkan <strong>HDD (Hard Disk Drive)</strong> mekanis lama. Memahami struktur ini sangat penting agar kita tahu persis di mana data fisik kita disimpan di dalam perangkat keras komputer.</p>
+</section>
+</div>
+<ol start="2" type="1">
+<li><p>Buat folder baru bernama <code>analitika-perkotaan</code>. Inilah <strong>direktori proyek</strong> kita, padanan laci studio tadi.</p></li>
+<li><p>Di dalamnya, buat empat subfolder sehingga susunannya seperti ini:</p></li>
+</ol>
+<pre><code>analitika-perkotaan/                &lt;- direktori proyek (laci induk)
+├── dataset-ganjil-2026-2027/       &lt;- map data mentah dari dosen
+├── modul/                          &lt;- map buku catatan (notebook) praktikum
+├── skrip/                          &lt;- map skrip Python (.py)
+└── keluaran/                       &lt;- map hasil kerja (tabel, grafik, peta)</code></pre>
+<ol start="4" type="1">
+<li>Salin folder <code>dataset-ganjil-2026-2027</code> yang dibagikan dosen ke dalam direktori proyek, sehingga namanya persis seperti bagan di atas.</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled" title="Pengetahuan Komputer">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Pengetahuan Komputer
+</div>
+</div>
+<section id="padanan-path-dan-struktur-folder-tree" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="padanan-path-dan-struktur-folder-tree">Padanan Path dan Struktur Folder Tree</h3>
+<p>Struktur folder tree di atas dapat direpresentasikan ke dalam bentuk <strong>path</strong>. Sebagai contoh, struktur folder tree berikut:</p>
+<pre><code>C:
+└── Users
+    └── Aulia
+        └── Documents
+            └── analitika-perkotaan</code></pre>
+<p>akan dituliskan sebagai path absolut: <code>C:/Users/Aulia/Documents/analitika-perkotaan</code>.</p>
+<p><strong>Mengapa pemahaman path ini penting?</strong></p>
+<p>Perhatikan contoh penamaan direktori dengan path yang salah di bawah ini:</p>
+<pre><code>C:
+└── Users
+    └── Aulia
+        ├── Documents
+        │   └── analitika-perkotaan
+        └── Music
+            └── analitika-perkotaan</code></pre>
+<p>Meskipun kedua folder sama-sama bernama <code>analitika-perkotaan</code>, path absolutnya sangat berbeda: yang satu berada di <code>C:/Users/Aulia/Documents/analitika-perkotaan</code> dan yang satu lagi di <code>C:/Users/Aulia/Music/analitika-perkotaan</code>. Jika program kita salah mencari lokasi, ia tidak akan menemukan berkas yang tepat.</p>
+</section>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Pengetahuan Komputer">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Pengetahuan Komputer
+</div>
+</div>
+<section id="penggunaan-simbol-slash-di-windows-vs-unix-untuk-penulisan-path" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="penggunaan-simbol-slash-di-windows-vs-unix-untuk-penulisan-path">Penggunaan Simbol Slash di Windows vs Unix untuk penulisan <em>Path</em></h3>
+<p>Sistem operasi Windows secara tradisional menggunakan simbol <em>backslash</em> (<code>\</code>) untuk memisahkan nama folder di dalam path (misalnya <code>C:\Users\Aulia</code>). Namun, sistem berbasis Unix (seperti Linux dan macOS), serta browser web, menggunakan <em>forward slash</em> (<code>/</code>) (misalnya <code>/Users/Aulia</code>). Dalam pemrograman Python, disarankan untuk menggunakan <em>forward slash</em> (<code>/</code>) karena Python dapat menerjemahkannya secara otomatis di Windows dan mencegah galat akibat karakter khusus (<em>escape character</em>).</p>
+</section>
+</div>
+<p>Susunan bercabang seperti bagan di atas disebut <strong><em>folder tree</em></strong> (pohon direktori). Untuk menunjuk lokasi sebuah berkas di dalam pohon itu, komputer memakai <strong><em>path</em></strong>: rangkaian nama folder yang dilalui untuk sampai ke berkas tersebut, dipisahkan garis miring. Ada dua cara menuliskannya:</p>
+<ul>
+<li><strong><em>Path</em> lengkap (absolut)</strong> — dari pangkal pohon sampai ujung, misalnya <code>C:/Users/Aulia/Documents/analitika-perkotaan/skrip/sapa.py</code>. Seperti alamat surat lengkap: kota, kecamatan, jalan, nomor rumah.</li>
+<li><strong><em>Path</em> relatif</strong> — dihitung dari posisi kita berdiri sekarang. Jika kita sedang berada di dalam <code>analitika-perkotaan</code>, berkas yang sama cukup ditunjuk dengan <code>skrip/sapa.py</code>. Seperti berkata “dua rumah di sebelah kanan” kepada orang yang sudah berdiri di jalan yang sama.</li>
+</ul>
+<p>Sepanjang semester kita akan lebih sering memakai <em>path</em> relatif, dan karena itu <strong>posisi kita berdiri</strong> (folder mana yang sedang terbuka) menjadi penting. Ini akan segera terasa saat kita bekerja dengan terminal.</p>
+</section>
+<section id="menyiapkan-ruang-kerja-environment-mandiri-dan-instalasi-conda" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="menyiapkan-ruang-kerja-environment-mandiri-dan-instalasi-conda"><span class="header-section-number">1.3.2</span> Menyiapkan Ruang Kerja: <em>Environment</em> Mandiri dan Instalasi Conda</h3>
+<p>Di studio, setiap perencana punya ruang kerja studio pribadi berisi meja, kursi, dan rak peralatan miliknya sendiri, supaya pengaturan alat untuk proyek yang satu tidak tercampur dengan proyek lain. Dalam dunia Python, ruang kerja pribadi itu bernama <strong><em>environment</em></strong>, dan petugas yang menyiapkannya bernama <strong>Conda</strong>. Satu komputer bisa memiliki banyak <em>environment</em> sekaligus, masing-masing berisi versi Python dan <em>library</em> yang berbeda, tanpa saling mengganggu.</p>
+<p><strong>Langkah nol: periksa dulu penghuni lama ruangan.</strong> Sebelum menata meja kerja, peserta studio memeriksa dulu meja siapa saja yang sudah menumpuk di ruangan itu — supaya tidak keliru memakai meja orang lain, dan tidak menggeser barang yang ternyata masih dipakai. Di komputer, langkah itu berarti mendata Python apa saja yang <strong>sudah ada</strong> sebelum kita menambah apa pun. Buka <strong>Command Prompt</strong> atau <strong>PowerShell</strong>, lalu ketik dua perintah berikut satu per satu. Tuliskan persis seperti tertulis, lengkap dengan akhiran <code>.exe</code>-nya:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">where.exe</span> python</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">where.exe</span> conda</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Perintah <code>where.exe</code> menampilkan <strong>semua</strong> lokasi program bernama itu yang ditemukan komputer, berurutan dari yang paling didahulukan. Salin hasilnya ke buku catatan Anda — kita akan menagihnya lagi di langkah kelima. Jangan kaget bila keluarannya lebih dari satu baris; justru itu yang biasa terjadi.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Penting!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Penting!
+</div>
+</div>
+<section id="mengapa-ditulis-where.exe-bukan-where" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="mengapa-ditulis-where.exe-bukan-where">Mengapa Ditulis <code>where.exe</code>, Bukan <code>where</code></h3>
+<p>Windows menyediakan dua terminal yang tampilannya nyaris serupa: <strong>Command Prompt</strong> dan <strong>PowerShell</strong>. Bedakan dari tulisan di awal barisnya — PowerShell selalu mengawali barisnya dengan <code>PS</code>, seperti <code>PS C:\Users\Nama&gt;</code>, sedangkan Command Prompt langsung <code>C:\Users\Nama&gt;</code>. Perhatikan ini baik-baik, karena pada Windows 11 PowerShell-lah yang paling sering terbuka lebih dulu — termasuk saat kita membuka terminal bawaan VS Code nanti.</p>
+<p>Perbedaannya berakibat langsung di langkah ini. Di Command Prompt, <code>where</code> adalah nama program pencari lokasi yang kita maksud. Di PowerShell, nama <code>where</code> sudah dipakai lebih dulu sebagai singkatan perintah bawaannya sendiri (<code>Where-Object</code>) yang tugasnya menyaring daftar — sama sekali tidak berhubungan dengan mencari lokasi program.</p>
+<p>Bentuk kegagalannya justru yang paling menyesatkan: PowerShell <strong>tidak menampilkan pesan galat apa pun</strong>. Ia hanya diam, kursor kembali ke baris kosong, seolah-olah perintahnya sudah dikerjakan. Layar kosong itu sangat mudah dibaca sebagai baris terakhir tabel di bawah — “belum ada Python” — padahal komputer Anda bisa jadi punya tiga sekaligus. Berbeda dengan pesan <code>'...' is not recognized</code> yang jelas-jelas menyuruh kita memperbaiki sesuatu, kegagalan yang diam justru membuat kita melangkah ke tahap berikutnya dengan kesimpulan yang keliru.</p>
+<p>Akhiran <code>.exe</code> menutup celah itu: ia memaksa terminal menjalankan program pencarinya, bukan singkatan tadi. Bentuk <code>where.exe</code> <strong>aman dipakai di ketiganya</strong> — Command Prompt, PowerShell, maupun Anaconda Prompt — jadi biasakan menulis akhiran itu sepanjang mata kuliah ini.</p>
+</section>
+</div>
+<p>Sekarang cocokkan keluaran Anda dengan tabel berikut, supaya langkah nol ini menghasilkan sebuah <strong>kesimpulan</strong>, bukan sekadar tumpukan tulisan:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Yang muncul di keluaran</th>
+<th style="text-align: left;">Artinya</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>C:\Python27\ArcGIS10.8\...</code> atau <code>...\ArcGISx6410.8\...</code></td>
+<td style="text-align: left;">ArcGIS Desktop 10.x — membawa Python 2.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>...\ArcGIS\Pro\bin\Python\...</code> (pada <code>where.exe conda</code>)</td>
+<td style="text-align: left;">ArcGIS Pro — membawa Conda sendiri</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>...\WindowsApps\python.exe</code></td>
+<td style="text-align: left;">Python dari Microsoft Store</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>C:\Python3xx\...</code> atau <code>...\AppData\Local\Programs\Python\...</code></td>
+<td style="text-align: left;">Python dari situs python.org</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tidak ada keluaran sama sekali</td>
+<td style="text-align: left;">belum ada Python — kondisi paling bersih; pastikan dulu yang Anda ketik <code>where.exe</code>, bukan <code>where</code></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Komputer Anda Mungkin Sudah Punya Python Tanpa Anda Sadari
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Bila di komputer Anda terpasang <strong>ArcGIS</strong>, maka Python <strong>sudah ada di sana sejak lama</strong> — dan ada dua kemungkinan yang penanganannya berbeda. Tabel di atas menunjukkan Anda termasuk yang mana. Baca <strong>hanya kasus Anda</strong>; bila keduanya muncul, kerjakan keduanya.</p>
+<p><strong>Kasus A — ArcGIS Desktop 10.x (ArcMap).</strong> Yang dibawanya adalah Python <strong>versi 2.7</strong>, umumnya di <code>C:/Python27/ArcGIS10.8</code>, dan ia sama sekali tidak memakai Conda. Apakah Python 2.7 ini terdaftar lebih dulu di daftar alamat komputer <strong>tidak bisa ditebak dari luar</strong>: pada sebagian mesin ia menang, pada sebagian lain ia tidak terdaftar sama sekali meski ArcGIS-nya terpasang. Bila ia menang, mengetik <code>python</code> di terminal baru menjalankan <strong>Python 2.7</strong> — bukan Python kita. Bahayanya justru bukan karena ia menolak bekerja, melainkan sebaliknya: ia mau berjalan, lalu gagal di tempat yang membingungkan. Kode seperti <code>print(f"Halo, {nama}")</code> yang akan kita tulis sebentar lagi ditolaknya dengan <code>SyntaxError</code>, padahal kode itu benar. Anda akan mengira diri sendiri salah ketik, padahal yang keliru adalah Python yang menjalankannya. Inilah alasan langkah nol dikerjakan sebelum apa pun.</p>
+<p><strong>Kasus B — ArcGIS Pro.</strong> ArcGIS Pro membawa <strong>Conda-nya sendiri</strong>, lengkap dengan sebuah <em>environment</em> bernama <code>arcgispro-py3</code> di <code>C:/Program Files/ArcGIS/Pro/bin/Python/envs/arcgispro-py3</code>. Bahayanya lebih halus dan baru terasa di langkah pertama nanti: perintah <code>conda</code> yang dikenali komputer Anda bisa jadi <strong>milik ArcGIS Pro</strong>, sehingga ruang kerja mata kuliah ini tanpa sadar dibangun di dalam instalasi ArcGIS. Periksa keluaran <code>where.exe conda</code> Anda: bila ada baris yang memuat potongan <code>\ArcGIS\Pro\</code>, jangan pakai terminal “Python Command Prompt” bawaan ArcGIS — gunakan <strong>Anaconda Prompt</strong> milik Miniconda. Bila Anaconda Prompt belum ada di komputer Anda, pasang Miniconda dari berkas yang dibagikan dosen terlebih dahulu.</p>
+<p><strong>Berlaku untuk kedua kasus: jangan dihapus, dan jangan dipakai untuk mata kuliah ini.</strong> Jangan dihapus, karena ArcGIS bergantung sepenuhnya pada Python bawaannya — merusaknya berarti merusak ArcGIS Anda. Jangan dipakai, dan ini bukan soal selera: Python 2.7 pada Kasus A sudah berhenti dikembangkan sejak 1 Januari 2020 sehingga tidak satu pun <em>library</em> yang kita pakai semester ini berjalan di sana, sedangkan <em>environment</em> bawaan ArcGIS Pro pada Kasus B memang dirancang untuk tidak diubah-ubah. <em>Environment</em> yang kita buat hari ini berdiri <strong>berdampingan</strong> dengan Python-Python itu: menambah satu ruang kerja baru, tanpa menggusur ruang kerja yang sudah ada.</p>
+<p>Di luar dua kasus itu, Python juga bisa masuk lewat <strong>Microsoft Store</strong> atau pemasangan dari situs <strong>python.org</strong>, sering kali tanpa kita sadari. Jangan buru-buru menganggapnya sepele: pada komputer yang sudah diperiksa untuk mata kuliah ini, justru Python dari python.org inilah yang <strong>memenangkan baris pertama</strong> daftar alamat — mengalahkan Python bawaan ArcGIS sekalipun. Bahayanya berkebalikan dengan Kasus A, dan justru karena itu lebih licin: ia <strong>tidak menolak apa pun</strong>. Kode Anda jalan, tidak ada tulisan merah, tetapi <em>library</em> yang dipakainya berbeda versi sehingga angka yang keluar bisa berbeda dari yang muncul di layar teman sebelah — tanpa satu pun pesan yang memberi tahu. Kegagalan yang diam jauh lebih sulit dilacak daripada yang berisik. Karena itu keberadaan mereka tidak cukup diingat, melainkan harus dibuktikan siapa yang sesungguhnya berjalan — dan itulah yang kita kerjakan di langkah kelima nanti.</p>
+</div>
+</div>
+<p><strong>Langkah pertama: periksa dulu, jangan langsung memasang.</strong> Komputer laboratorium kampus sudah dipasangi Conda (bahkan lengkap dengan <em>environment</em> mata kuliah ini) oleh tim dosen, jadi memasang ulang hanya membuang waktu. Buka <strong>Anaconda Prompt</strong>.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Penting!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Penting!
+</div>
+</div>
+<section id="konsep-path-menjalankan-conda-di-terminal-biasa" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="konsep-path-menjalankan-conda-di-terminal-biasa">Konsep Path &amp; Menjalankan Conda di Terminal Biasa</h3>
+<p>Anaconda Prompt adalah terminal khusus yang sudah dikonfigurasi secara otomatis agar dapat mengenali perintah <code>conda</code>. Jika Anda ingin menjalankan perintah <code>conda</code> dari Command Prompt biasa atau PowerShell, Anda harus menginisialisasinya terlebih dahulu dengan menjalankan perintah <code>conda init</code> di Anaconda Prompt, lalu menutup dan membuka kembali terminal biasa Anda.</p>
+<p>Setelah memahami hal ini, cobalah buka Command Prompt biasa atau PowerShell di komputer Anda, lalu ketik <code>conda --version</code> untuk memverifikasi apakah ia sudah mengenali perintah tersebut.</p>
+</section>
+</div>
+<p>Di Anaconda Prompt, ketik:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> <span class="at">--version</span></span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ada dua kemungkinan jawaban:</p>
+<ul>
+<li><p>Muncul tulisan seperti <code>conda 24.11.0</code> (angkanya boleh berbeda) — Conda <strong>sudah terpasang</strong>. Lanjutkan ke pemeriksaan <em>environment</em> di bawah.</p></li>
+<li><p>Muncul pesan seperti <code>'conda' is not recognized ...</code> — Conda <strong>belum ada</strong>. Pasang <strong>Miniconda</strong> dari berkas instalasi yang dibagikan dosen (tersedia <em>offline</em>, tidak perlu mengunduh), ikuti pilihan bawaannya sampai selesai, tutup terminalnya, buka <strong>Anaconda Prompt</strong> yang baru, lalu ulangi perintah di atas sampai versi Conda muncul.</p></li>
+</ul>
+<p><strong>Langkah kedua: periksa apakah <em>environment</em> mata kuliah sudah ada.</strong> Ketik:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env list</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Perintah ini menampilkan daftar semua ruang kerja (<em>environment</em>) yang ada di komputer. Jika di daftarnya sudah ada baris bernama <code>analitika-perkotaan</code> (kondisi normal di komputer lab), ruang kerja kita sudah berdiri — lompat ke langkah keempat.</p>
+<p><strong>Langkah ketiga (hanya jika belum ada): buat <em>environment</em> dari berkas resep.</strong> Dosen membagikan sebuah berkas bernama <code>environment.yml</code>. Salin berkas itu ke direktori proyek <code>analitika-perkotaan</code> yang kita buat tadi. Isinya seperti ini:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> analitika-perkotaan</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">channels</span><span class="kw">:</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> conda-forge</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> nodefaults</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dependencies</span><span class="kw">:</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">  # Dasar: Modul 2-4</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> python=3.12</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> pandas</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> openpyxl</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">  # Visual: Modul 5</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> matplotlib-base</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> seaborn</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">  # Spasial: Modul 6-7</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> geopandas</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> leafmap</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> mapclassify</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> folium</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> contextily</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">  # Penarikan data: Modul 9</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> requests</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> beautifulsoup4</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> osmnx</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co">  # Pemodelan: Modul 10</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> scikit-learn</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co">  # Dashboard: Tugas Besar Pekan 11-16 &amp; UAS</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> streamlit</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> streamlit-folium</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="co">  # Infrastruktur agar notebook berjalan</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> ipykernel</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> jupyterlab</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> notebook</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> nbformat</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> nbclient</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> pyyaml</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="co">  # Bantu: pembacaan dataset dan tabel interaktif</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> dbfread</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> itables</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="fu">variables</span><span class="kw">:</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">PYTHONNOUSERSITE</span><span class="kw">:</span><span class="at"> </span><span class="st">"1"</span></span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Berkas ini adalah <strong>daftar belanja perabot</strong> untuk membangun ruang kerja satu semester: nama ruang kerjanya (<code>name</code>), toko tempat membelinya (<code>channels</code>), daftar rak, kursi, serta meja yang dibeli (<code>dependencies</code>), dan satu aturan rumah yang berlaku di dalam ruangan itu (<code>variables</code>). Baris berawalan tanda <code>#</code> adalah <strong>komentar</strong>: keterangan untuk manusia, diabaikan komputer. Aturan rumah <code>PYTHONNOUSERSITE</code> itu melarang ruang kerja kita mengambil perabot dari sebuah rak titipan bersama di luar ruangan — alasannya dibahas pada <em>callout</em> terakhir bagian ini. Dengan satu berkas ini kita tidak perlu mengetik nama <em>library</em> satu per satu — cukup satu perintah, dan Conda membelanjakan semuanya:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> Documents<span class="dt">\a</span>nalitika-perkotaan</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Perintah <code>cd</code> (<em>change directory</em>) memindahkan posisi berdiri kita ke direktori proyek — ingat pembahasan <em>path</em> tadi: <code>environment.yml</code> ditunjuk dengan <em>path</em> relatif, sehingga kita harus berdiri di folder tempat berkas itu berada. Proses ini butuh beberapa menit.</p>
+<p><strong>Langkah keempat: masuk ke ruang kerja.</strong> Aktifkan <em>environment</em> dengan:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate analitika-perkotaan</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Perhatikan awalan tulisan di terminal berubah dari <code>(base)</code> menjadi <code>(analitika-perkotaan)</code>. Awalan itu adalah papan nama ruangan: ia memberi tahu ruang kerja mana yang sedang kita buka pintunya untuk mulai bekerja. Mulai sekarang, setiap kali membuka terminal untuk mata kuliah ini, biasakan memeriksa papan nama tersebut.</p>
+<p><strong>Langkah kelima: buktikan ruang kerjanya benar-benar terbuka.</strong> Papan nama <code>(analitika-perkotaan)</code> itu <strong>klaim</strong>, bukan bukti. Papan nama bisa menyala sementara yang benar-benar bekerja adalah Python lain — dan ini bukan kemungkinan teoretis, melainkan kejadian yang wajar di komputer yang sudah punya banyak Python (ingat hasil langkah nol Anda). Karena itu, sekali di awal semester, kita buktikan. Dengan papan nama <code>(analitika-perkotaan)</code> menyala, jalankan tiga perintah berikut — perhatikan lagi akhiran <code>.exe</code> pada perintah pertama:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">where.exe</span> python</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import sys; print(sys.prefix)"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import sys; print(sys.path)"</span></span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ruang kerja Anda dinyatakan <strong>lulus</strong> bila ketiga syarat ini terpenuhi:</p>
+<ol type="1">
+<li>Baris <strong>paling atas</strong> keluaran <code>where.exe python</code> memuat potongan <code>envs\analitika-perkotaan</code>.</li>
+<li>Keluaran perintah kedua berakhir dengan <code>envs\analitika-perkotaan</code>.</li>
+<li>Keluaran perintah ketiga <strong>tidak memuat</strong> potongan <code>AppData\Roaming\Python</code> di mana pun.</li>
+</ol>
+<p>Catat ketiga keluaran itu — Latihan Mandiri butir 5 akan menagihnya.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Jika Ruang Kerja Anda Tidak Lulus
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Perintah pertama tidak mengeluarkan apa pun</strong>: hampir pasti yang terketik <code>where</code>, bukan <code>where.exe</code>, dan terminal Anda PowerShell. Ulangi dengan akhiran <code>.exe</code>-nya.</p>
+<p><strong>Syarat 1 atau 2 gagal</strong> (yang muncul Python lain): tutup terminal, buka <strong>Anaconda Prompt</strong> baru, jalankan <code>conda activate analitika-perkotaan</code>, lalu ulangi. Bila masih gagal, kemungkinan besar <em>environment</em>-nya belum benar-benar terbentuk — ulangi langkah kedua dan ketiga. Bila yang muncul di baris teratas justru <code>C:\Python27\...</code>, itu Kasus A pada <em>callout</em> sebelumnya — penyebabnya hampir selalu <code>conda activate</code> yang belum dijalankan di terminal tersebut.</p>
+<p><strong>Syarat 3 gagal</strong> (muncul <code>AppData\Roaming\Python</code>): <strong>jangan diperbaiki sendiri, laporkan ke dosen.</strong> Kondisi ini berarti ada rak paket titipan yang membayangi ruang kerja Anda, dan membersihkannya sembarangan bisa merusak program lain di komputer Anda — termasuk ArcGIS Pro bila Anda memakainya.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Pengetahuan Komputer">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Pengetahuan Komputer
+</div>
+</div>
+<section id="satu-komputer-banyak-python-mengapa-harus-dibuktikan" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="satu-komputer-banyak-python-mengapa-harus-dibuktikan">Satu Komputer, Banyak Python: Mengapa Harus Dibuktikan</h3>
+<p>Ketika kita mengetik <code>python</code> di terminal, komputer <strong>tidak tahu</strong> Python mana yang kita maksud. Ia hanya menyusuri sebuah daftar alamat bernama <strong>PATH</strong> dari atas ke bawah, lalu menjalankan <strong>program pertama</strong> bernama <code>python</code> yang ia temukan. Itulah sebabnya <code>where.exe python</code> bisa menampilkan beberapa baris sekaligus: baris pertama adalah yang menang, sisanya menganggur.</p>
+<p><code>conda activate</code> bekerja dengan cara menyelipkan alamat <em>environment</em> kita ke <strong>urutan paling atas</strong> daftar itu. Bila ada sesuatu yang menyelipkan alamat lain lebih atas lagi, papan nama tetap menyala tetapi yang berjalan Python yang lain. Analogi studionya: papan nama di pintu ruangan bisa saja tertulis nama Anda, sementara yang duduk mengerjakan gambar di dalamnya orang lain. Satu-satunya cara memastikan adalah menengok ke dalam — dan <code>where.exe python</code> beserta <code>sys.prefix</code> adalah cara menengoknya.</p>
+<p>Perintah <code>python -c "..."</code> sendiri berarti “jalankan kode di dalam tanda kutip ini, sekali saja, lalu keluar”. Isi kodenya akan Anda pahami sepenuhnya di Modul 2; untuk sekarang ia cukup diperlakukan sebagai <strong>alat periksa</strong>, seperti meteran yang kita pakai tanpa perlu tahu isi mesinnya.</p>
+</section>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Jangan Pernah Memasang Paket di Luar <em>Environment</em>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Suatu hari Anda akan menemukan tutorial di internet yang menyuruh mengetik <code>pip install nama-paket</code>. <strong>Jangan pernah menjalankannya sebelum papan nama <code>(analitika-perkotaan)</code> menyala.</strong></p>
+<p>Alasannya begini. Selain rak di dalam tiap ruang kerja, Windows menyediakan <strong>satu rak titipan bersama</strong> di <code>C:/Users/&lt;Nama User Anda&gt;/AppData/Roaming/Python/</code>. Rak itu dipakai bersama-sama oleh <strong>semua</strong> Python bernomor versi sama di komputer itu — termasuk Python bawaan program lain seperti ArcGIS Pro, bila nomor versinya kebetulan sama. Lebih berbahaya lagi: isi rak titipan itu <strong>didahulukan</strong> atas isi ruang kerja kita.</p>
+<p>Akibatnya, satu perintah <code>pip install</code> yang dijalankan tanpa mengaktifkan <em>environment</em> bisa: (a) diam-diam mengubah perilaku ruang kerja mata kuliah ini, (b) mengganggu program lain yang memakai Python bernomor versi sama, dan (c) melakukan keduanya <strong>tanpa satu pun pesan galat</strong> — sehingga kerusakannya baru terasa berminggu-minggu kemudian dan sangat sulit dilacak.</p>
+<p>Aturan kelas ini sederhana dan tidak ada pengecualiannya: <strong><code>conda activate analitika-perkotaan</code> dulu, baru memasang apa pun.</strong></p>
+</div>
+</div>
+</section>
+<section id="berbicara-dengan-terminal-menjalankan-perintah-python-interaktif" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="berbicara-dengan-terminal-menjalankan-perintah-python-interaktif"><span class="header-section-number">1.3.3</span> Berbicara dengan Terminal: Menjalankan Perintah Python Interaktif</h3>
+<p>Terminal adalah loket tempat kita memberi instruksi kerja kepada komputer dengan tulisan, bukan klik. Seperti berbicara dengan petugas loket: kita menyebut satu permintaan, petugas mengerjakannya, lalu melapor balik.</p>
+<p>Buka <strong>Visual Studio Code</strong>, lalu buka direktori proyek kita lewat menu <strong>File → Open Folder → <code>analitika-perkotaan</code></strong>.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Pengetahuan VS Code">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Kiat</span>Pengetahuan VS Code
+</div>
+</div>
+<section id="mengenal-antarmuka-visual-studio-code" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="mengenal-antarmuka-visual-studio-code">Mengenal Antarmuka Visual Studio Code</h3>
+<p>Saat pertama kali membuka Visual Studio Code, terdapat beberapa area utama yang esensial untuk menjalankan praktik kita:</p>
+<ol type="1">
+<li><strong>Activity Bar</strong> (Sisi Paling Kiri): Berisi ikon-ikon pintasan untuk mengelola lembar kerja, seperti <em>Explorer</em> (melihat berkas proyek), <em>Search</em> (mencari teks), dan <em>Extensions</em> (memasang fitur tambahan).</li>
+<li><strong>Side Bars</strong> (Samping Activity Bar): Menampilkan daftar berkas dan folder aktif dalam direktori proyek Anda (<em>Explorer</em>).</li>
+<li><strong>Editor Area/Editor Groups</strong> (Bagian Tengah): Tempat utama untuk menulis dan menyunting berkas kode (<code>.py</code> atau <code>.ipynb</code>). Tempat tersebut bisa berjumlah lebih dari 1 dan mengelompokkan beberapa berkas, sehingga disebut “Groups”.</li>
+<li><strong>Panel / Integrated Terminal</strong> (Bagian Bawah): Area terminal terintegrasi tempat kita menjalankan perintah baris tanpa harus keluar dari VS Code.</li>
+</ol>
+<div id="fig-vscode-interface" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vscode-interface-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="assets/vscode-interface.png" class="img-fluid figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vscode-interface-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Gambar&nbsp;1.1: Tata Letak Antarmuka Visual Studio Code
+</figcaption>
+</figure>
+</div>
+</section>
+</div>
+<p>Buka terminal bawaannya dengan menu <strong>Terminal → New Terminal</strong> — terminal ini otomatis berdiri di direktori proyek, jadi kita tidak perlu <code>cd</code> lagi. Pastikan papan nama <code>(analitika-perkotaan)</code> menyala; jika belum, jalankan lagi <code>conda activate analitika-perkotaan</code>.</p>
+<p>Sekarang panggil Python:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span></span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Tampilan berubah: muncul keterangan versi Python dan tanda <code>&gt;&gt;&gt;</code>. Tanda itu artinya Python siap menerima perintah <strong>satu per satu</strong> — mode ini disebut mode <strong>interaktif</strong> (atau <em>console</em>). Coba ketik dua perintah berikut, tekan Enter setiap selesai satu baris:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="bu">print</span>(<span class="st">"Halo, Studio!"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>Halo, Studio<span class="op">!</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span></span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Python langsung menjawab setiap perintah, seperti petugas loket yang menjawab lisan pertanyaan lisan. Jika sudah puas, pamit dengan:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> exit()</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Tanda <code>&gt;&gt;&gt;</code> hilang dan kita kembali ke terminal biasa. Mode interaktif enak untuk coba-coba cepat, tetapi percakapannya <strong>tidak tersimpan</strong>. Untuk pekerjaan yang ingin kita simpan dan ulangi, kita butuh cara kedua: menuliskan perintah ke dalam berkas.</p>
+</section>
+<section id="menulis-catatan-kerja-membuat-skrip-sapa.py-dan-menjalankannya" class="level3" data-number="1.3.4">
+<h3 data-number="1.3.4" class="anchored" data-anchor-id="menulis-catatan-kerja-membuat-skrip-sapa.py-dan-menjalankannya"><span class="header-section-number">1.3.4</span> Menulis Catatan Kerja: Membuat Skrip <code>sapa.py</code> dan Menjalankannya</h3>
+<p>Daripada mendiktekan perintah satu per satu, kita bisa menuliskan seluruh instruksi kerja di selembar kertas, lalu menyerahkannya ke loket untuk dikerjakan petugas dari atas sampai bawah. Lembar instruksi tertulis itu adalah <strong>skrip</strong>: berkas teks berisi perintah Python, disimpan dengan akhiran <code>.py</code>.</p>
+<p>Di VS Code, buat berkas baru di dalam folder <code>skrip</code> dan beri nama <code>sapa.py</code>. Ketik isinya seperti berikut (silakan ganti nama sesuai nama Anda), lalu simpan:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>nama_praktikan <span class="op">=</span> <span class="st">"Aulia"</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>prodi <span class="op">=</span> <span class="st">"Perencanaan Wilayah dan Kota"</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Halo, </span><span class="sc">{</span>nama_praktikan<span class="sc">}</span><span class="ss"> dari </span><span class="sc">{</span>prodi<span class="sc">}</span><span class="ss">!"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Selamat datang di praktikum Analitika Perkotaan."</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Untuk meminta petugas loket mengerjakannya, panggil <code>python</code> diikuti <em>path</em> menuju skripnya. Karena terminal kita berdiri di direktori proyek, <em>path</em> relatifnya adalah <code>skrip/sapa.py</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> skrip/sapa.py</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Sel berikut menjalankan isi <code>sapa.py</code> yang sama persis, supaya hasilnya terlihat langsung di modul ini:</p>
+<div id="9ae4526e" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:50.700774Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:50.700774Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:50.709052Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:50.709052Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>nama_praktikan <span class="op">=</span> <span class="st">"Aulia"</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>prodi <span class="op">=</span> <span class="st">"Perencanaan Wilayah dan Kota"</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Halo, </span><span class="sc">{</span>nama_praktikan<span class="sc">}</span><span class="ss"> dari </span><span class="sc">{</span>prodi<span class="sc">}</span><span class="ss">!"</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Selamat datang di mata kuliah Analitika Perkotaan."</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Halo, Aulia dari Perencanaan Wilayah dan Kota!
+Selamat datang di mata kuliah Analitika Perkotaan.</code></pre>
+</div>
+</div>
+<p>Empat baris barusan memperkenalkan tiga hal paling mendasar dalam Python. Ketiganya dijelaskan pada <em>callout</em> di bawah — bacalah pelan-pelan di rumah, karena semuanya akan dipakai di <strong>setiap</strong> pertemuan setelah ini.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Konsep Python">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Konsep Python
+</div>
+</div>
+<section id="variabel-dan-penugasan-nilai" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="variabel-dan-penugasan-nilai">Variabel dan Penugasan Nilai</h3>
+<p><code>nama_praktikan = "Aulia"</code> artinya: siapkan sebuah kotak berlabel <code>nama_praktikan</code>, lalu masukkan tulisan <code>"Aulia"</code> ke dalamnya. Kotak berlabel itulah <strong>variabel</strong>, dan tanda <code>=</code> disebut <strong>penugasan</strong> (<em>assignment</em>) — perintah “isikan nilai di kanan ke dalam label di kiri”, bukan pernyataan matematika “sama dengan”.</p>
+<p>Setelah diisi, label bisa dipakai di mana pun untuk memanggil isinya — itulah sebabnya <code>print(f"...{nama_praktikan}...")</code> bisa menampilkan <code>Aulia</code>. Isi kotak juga boleh diganti kapan saja dengan penugasan baru, misalnya <code>nama_praktikan = "Bima"</code>; isi lama tertimpa oleh yang baru.</p>
+<p>Di studio, variabel seperti kotak berlabel di rak: sekali kotak “data survei” diisi, siapa pun yang butuh tinggal menyebut labelnya tanpa memindahkan isinya ke sana-sini. Nanti kita akan sering menaruh hal-hal panjang (misalnya <em>path</em> berkas data) ke dalam variabel pendek agar tidak lelah mengetik.</p>
+</section>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Konsep Python">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Konsep Python
+</div>
+</div>
+<section id="tipe-data-skalar-string-dan-angka" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="tipe-data-skalar-string-dan-angka">Tipe Data Skalar — String dan Angka</h3>
+<p>Perhatikan perbedaan dua macam isi kotak: <code>"Aulia"</code> ditulis <strong>di antara tanda kutip</strong>, sedangkan angka seperti <code>5</code> atau <code>2026</code> ditulis polos. Tanda kutip adalah penanda bahwa isinya adalah <strong>teks</strong> — Python menyebutnya <strong>string</strong> (<code>str</code>). Tanpa tanda kutip, Python membacanya sebagai <strong>angka</strong>: bilangan bulat (<strong>integer</strong>/<code>int</code>, misalnya <code>2026</code>) atau bilangan berkoma (<strong>float</strong>, misalnya <code>197.22</code> — perhatikan pemisah desimalnya titik, bukan koma).</p>
+<p>Jenis-jenis isi ini disebut <strong>tipe data</strong>, dan yang berisi satu nilai tunggal seperti di atas disebut tipe data <strong>skalar</strong>. Tipe menentukan apa yang bisa dilakukan: angka bisa dihitung (<code>2 + 3</code> menghasilkan <code>5</code>), sedangkan string dirangkai (<code>"20" + "26"</code> menghasilkan <code>"2026"</code>, bukan <code>46</code>!). Salah membedakan keduanya adalah sumber kekeliruan yang sangat umum — kita akan bertemu pesan kesalahannya sebentar lagi.</p>
+</section>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Konsep Python">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Catatan</span>Konsep Python
+</div>
+</div>
+<section id="print-dan-f-string" class="level3 unnumbered unlisted callout-body-container callout-body">
+<h3 class="unnumbered unlisted anchored" data-anchor-id="print-dan-f-string"><code>print()</code> dan f-string</h3>
+<p><code>print()</code> adalah perintah untuk <strong>menampilkan</strong> sesuatu ke layar — petugas loket membacakan isi kotak yang kita sebut. Apa pun yang ditaruh di dalam tanda kurungnya akan dilaporkan ke terminal.</p>
+<p>Bentuk <code>f"Halo, {nama_praktikan} dari {prodi}!"</code> disebut <strong>f-string</strong> (huruf <code>f</code> di depan tanda kutip artinya <em>formatted</em>). Di dalam f-string, bagian yang diapit kurung kurawal <code>{...}</code> akan <strong>diganti dengan isi variabelnya</strong> saat ditampilkan. Ini cara paling rapi untuk mencampur teks tetap dengan nilai variabel — tanpa f-string kita harus menyambung teks potong demi potong.</p>
+</section>
+</div>
+</section>
+<section id="membaca-pesan-kegagalan-tiga-error-paling-umum-dan-debugging-dasar" class="level3" data-number="1.3.5">
+<h3 data-number="1.3.5" class="anchored" data-anchor-id="membaca-pesan-kegagalan-tiga-error-paling-umum-dan-debugging-dasar"><span class="header-section-number">1.3.5</span> Membaca Pesan Kegagalan: Tiga <em>Error</em> Paling Umum dan <em>Debugging</em> Dasar</h3>
+<p>Cepat atau lambat — biasanya cepat — kode kita akan gagal berjalan dan Python menampilkan tulisan merah yang panjang. Jangan panik: pesan itu bukan kemarahan, melainkan <strong>petugas loket yang balik bertanya</strong> karena instruksi kita tidak bisa dia pahami atau kerjakan. Seperti peserta studio yang menerima catatan revisi dari asisten studio, perencana yang baik tidak takut pada catatan revisi; programmer yang baik tidak takut pada pesan <em>error</em>.</p>
+<p>Kunci membacanya: lihat <strong>baris paling bawah</strong> terlebih dahulu. Di sanalah tertulis <strong>nama jenis kesalahannya</strong> beserta keterangan singkat, sedangkan baris-baris di atasnya (disebut <em>traceback</em>) menunjukkan di berkas dan baris ke berapa kesalahan terjadi. Tiga jenis inilah yang paling sering menyapa pemula — kita sengaja memproduksi ketiganya sekarang, supaya saat muncul sungguhan kita sudah kenal wajahnya.</p>
+<p><strong>Wajah pertama: <code>SyntaxError</code> — kalimat instruksinya cacat.</strong> Python punya tata bahasa. Lupa menutup tanda kutip atau tanda kurung membuat kalimat kita tidak selesai, dan Python menolak bahkan untuk mulai bekerja. Jalankan sel berikut yang lupa menutup tanda kutip dan kurung:</p>
+<div id="2628c080" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:50.712058Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:50.712058Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:50.716712Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:50.716712Z&quot;}}" data-tags="[&quot;raises-exception&quot;]" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Halo, Studio!</span></span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>  <span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[2]</span><span class="ansi-green-fg">, line 1</span>
+<span class="ansi-red-fg">    </span><span class="ansi-red-fg">print("Halo, Studio!</span>
+          ^
+<span class="ansi-red-fg">SyntaxError</span><span class="ansi-red-fg">:</span> unterminated string literal (detected at line 1)
+</pre>
+</div>
+</div>
+</div>
+<p>Perhatikan baris terakhirnya: nama kesalahannya <code>SyntaxError</code>, dan tanda <code>^</code> menunjuk lokasi Python kebingungan. Perbaikannya: lengkapi pasangan tanda yang hilang — setiap <code>"</code> dan <code>(</code> harus ada penutupnya.</p>
+<p><strong>Wajah kedua: <code>NameError</code> — menyebut label kotak yang tidak ada.</strong> Kesalahan ini muncul saat kita memanggil variabel yang belum pernah diisi, paling sering karena <strong>salah ketik</strong>. Di sel berikut, kita bermaksud memanggil <code>nama_praktikan</code> tetapi namanya kurang satu huruf:</p>
+<div id="d261be8d" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:50.719718Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:50.719718Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:51.312927Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:51.312421Z&quot;}}" data-tags="[&quot;raises-exception&quot;]" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(nama_praktika)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[3]</span><span class="ansi-green-fg">, line 1</span>
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">1</span> <span style="color:rgb(0,135,0)">print</span>(<span class="ansi-yellow-bg">nama_praktika</span>)
+
+<span class="ansi-red-fg">NameError</span>: name 'nama_praktika' is not defined</pre>
+</div>
+</div>
+</div>
+<p>Python menjawab <code>NameError: name 'nama_praktika' is not defined</code> — “tidak ada kotak berlabel itu di rak”. Perbaikannya: cocokkan ejaan nama variabel dengan yang didefinisikan, huruf demi huruf (huruf besar-kecil dibedakan!). Pada Python versi terbaru, sesekali pesan ini malah berbaik hati menebak maksud kita dengan saran <code>Did you mean: ...?</code>.</p>
+<p><strong>Wajah ketiga: <code>TypeError</code> — menyuruh dua tipe data yang tak cocok bekerja sama.</strong> Ingat pembahasan tipe data tadi: string dan angka punya kemampuan berbeda. Menyambung teks dengan angka memakai <code>+</code> membuat Python bingung harus menghitung atau merangkai:</p>
+<div id="7630885f" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:51.314933Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:51.314933Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:51.328056Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:51.328056Z&quot;}}" data-tags="[&quot;raises-exception&quot;]" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">"Kota Bandar Lampung berusia "</span> <span class="op">+</span> <span class="dv">342</span></span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[4]</span><span class="ansi-green-fg">, line 1</span>
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">1</span> <span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">Kota Bandar Lampung berusia </span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">+</span><span class="ansi-yellow-bg"> </span><span class="ansi-green-fg ansi-yellow-bg">342</span>
+
+<span class="ansi-red-fg">TypeError</span>: can only concatenate str (not "int") to str</pre>
+</div>
+</div>
+</div>
+<p>Baris terakhirnya <code>TypeError: can only concatenate str (not "int") to str</code> — “saya hanya bisa menyambung string dengan string, bukan dengan bilangan bulat”. Perbaikannya yang paling rapi sudah kita kenal: bungkus dengan f-string, <code>print(f"Kota Bandar Lampung berusia {342}")</code>, dan Python otomatis mengubah angkanya menjadi teks.</p>
+<p>Dari tiga perkenalan ini, lahirlah rutinitas <strong><em>debugging</em></strong> (mencari dan memperbaiki kesalahan) yang akan kita pakai sepanjang semester:</p>
+<ol type="1">
+<li><p>Baca <strong>baris paling bawah</strong>: apa nama jenis kesalahannya?</p></li>
+<li><p>Lihat <strong>nomor baris</strong> yang ditunjuk <em>traceback</em>: di mana lokasinya?</p></li>
+<li><p>Perbaiki satu hal itu saja, lalu <strong>jalankan ulang</strong>.</p></li>
+<li><p>Masih gagal? Ulangi dari langkah 1. Setiap pesan baru adalah petunjuk baru.</p></li>
+</ol>
+</section>
+<section id="membandingkan-dua-berkas-mengapa-satu-file-harus-lengkap-mandiri" class="level3" data-number="1.3.6">
+<h3 data-number="1.3.6" class="anchored" data-anchor-id="membandingkan-dua-berkas-mengapa-satu-file-harus-lengkap-mandiri"><span class="header-section-number">1.3.6</span> Membandingkan Dua Berkas: Mengapa Satu File Harus Lengkap-Mandiri</h3>
+<p>Sekarang eksperimen kecil yang hasilnya akan kita tagih lagi di Modul 2. Buat <strong>dua</strong> berkas baru di folder <code>skrip</code>.</p>
+<p>Berkas pertama, <code>hitung_lengkap.py</code>, berisi perhitungan kepadatan penduduk Kota Bandar Lampung <em>beserta</em> definisi variabelnya:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>luas_wilayah_km2 <span class="op">=</span> <span class="fl">197.22</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>jumlah_penduduk <span class="op">=</span> <span class="dv">1166066</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>kepadatan <span class="op">=</span> jumlah_penduduk <span class="op">/</span> luas_wilayah_km2</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Kepadatan penduduk: </span><span class="sc">{</span>kepadatan<span class="sc">:.0f}</span><span class="ss"> jiwa per km persegi"</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Berkas kedua, <code>hitung_pincang.py</code>, berisi <strong>hanya</strong> perhitungannya — definisi variabelnya sengaja tidak ditulis:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>kepadatan <span class="op">=</span> jumlah_penduduk <span class="op">/</span> luas_wilayah_km2</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Kepadatan penduduk: </span><span class="sc">{</span>kepadatan<span class="sc">:.0f}</span><span class="ss"> jiwa per km persegi"</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Jalankan keduanya bergantian dari terminal:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> skrip/hitung_lengkap.py</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> skrip/hitung_pincang.py</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Hasilnya:</p>
+<pre><code>Kepadatan penduduk: 5913 jiwa per km persegi
+Traceback (most recent call last):
+  File "skrip/hitung_pincang.py", line 1, in &lt;module&gt;
+    kepadatan = jumlah_penduduk / luas_wilayah_km2
+                ^^^^^^^^^^^^^^^
+NameError: name 'jumlah_penduduk' is not defined</code></pre>
+<p>Berkas pertama berhasil; berkas kedua gagal dengan <code>NameError</code> — wajah kedua yang baru saja kita kenal. Padahal <code>hitung_lengkap.py</code> baru saja dijalankan dan variabelnya baru saja diisi. Mengapa <code>hitung_pincang.py</code> tidak bisa ikut memakainya?</p>
+<p>Karena <strong>setiap kali <code>python berkas.py</code> dijalankan, komputer membuka “sesi kerja” yang benar-benar baru</strong>: papan tulisnya kosong, raknya kosong, tidak ada ingatan apa pun dari eksekusi sebelumnya maupun dari berkas lain. Begitu skrip selesai, sesi itu ditutup dan seluruh isinya dibuang. Dua pelajaran penting:</p>
+<ol type="1">
+<li><p><strong>Satu berkas skrip harus lengkap-mandiri</strong>: semua variabel yang dipakai harus didefinisikan di dalam berkas itu sendiri, seperti lembar instruksi kerja yang harus bisa dikerjakan petugas loket tanpa bertanya ke lembar lain.</p></li>
+<li><p>Ingat baik-baik perilaku “tidak ada ingatan” ini — pada Modul 2 kita akan bertemu Jupyter Notebook yang perilakunya <strong>justru sebaliknya</strong>, dan perbedaan itulah sumber kebingungan mahasiswa yang paling umum.</p></li>
+</ol>
+</section>
+<section id="menyiapkan-buku-lapangan-membuat-jupyter-notebook-dan-menyambungkan-kernel" class="level3" data-number="1.3.7">
+<h3 data-number="1.3.7" class="anchored" data-anchor-id="menyiapkan-buku-lapangan-membuat-jupyter-notebook-dan-menyambungkan-kernel"><span class="header-section-number">1.3.7</span> Menyiapkan Buku Lapangan: Membuat Jupyter Notebook dan Menyambungkan <em>Kernel</em></h3>
+<p>Peralatan terakhir yang kita siapkan hari ini adalah <strong>Jupyter Notebook</strong> — buku catatan lapangan seorang perencana-analis. Di lapangan, satu buku catatan memuat tulisan pengamatan, angka pengukuran, dan sketsa dalam halaman yang sama. Notebook persis seperti itu: dalam satu berkas <code>.ipynb</code> kita bisa menulis narasi, kode Python, sekaligus melihat hasil dan grafiknya. Hampir seluruh praktikum kita mulai Modul 2 akan tinggal di dalam notebook.</p>
+<p>Buat notebook pertama Anda:</p>
+<ol type="1">
+<li><p>Di VS Code, klik kanan folder <code>modul</code> → <strong>New File</strong> → beri nama <code>buku-lapangan.ipynb</code>. VS Code otomatis membuka tampilan notebook yang tersusun atas <strong>sel-sel</strong>.</p></li>
+<li><p>Di pojok kanan atas, klik <strong>Select Kernel</strong> → <strong>Python Environments</strong> → pilih <strong><code>analitika-perkotaan</code></strong>.</p></li>
+</ol>
+<p>Langkah kedua itu yang paling penting. <strong><em>Kernel</em> adalah mesin Python yang menjalankan sel-sel notebook</strong> — dan kita baru saja menyambungkan notebook ke mesin dari <em>environment</em> buatan kita sendiri, lengkap dengan semua <em>library</em> yang tadi dipasang lewat <code>environment.yml</code>. Notebook tanpa kernel seperti buku lapangan tanpa surveyor: catatannya ada, tetapi tidak ada yang menghitung.</p>
+<ol start="3" type="1">
+<li><strong>Buktikan kernelnya benar.</strong> Sama seperti papan nama terminal di langkah kelima tadi, nama kernel yang tampil juga baru sebatas klaim. Buat sel pertama berisi dua baris berikut, lalu jalankan dengan tombol ▶ di kiri sel (atau <code>Shift+Enter</code>):</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sys.executable)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Path</em> yang tercetak <strong>harus</strong> memuat potongan <code>envs\analitika-perkotaan</code>. Jika yang muncul lokasi lain, kembali ke langkah 2 dan pilih ulang kernelnya; bila tetap tidak berubah, laporkan ke dosen.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Perhatian</span>Nama Kernel Bisa Berbohong
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Daftar kernel yang Anda lihat di VS Code tidak dibaca langsung dari daftar <em>environment</em> Conda. Ia dibaca dari berkas-berkas kecil bernama <code>kernel.json</code>, dan di dalam berkas itu <strong>nama yang ditampilkan</strong> disimpan terpisah dari <strong>Python yang benar-benar dijalankan</strong>. Keduanya bisa tidak cocok: sebuah kernel bertuliskan “Analitika Perkotaan” sepenuhnya sah menunjuk Python mana pun di komputer, termasuk Python lama dengan versi <em>library</em> yang berbeda.</p>
+<p>Kasus semacam ini benar-benar pernah terjadi dalam penyusunan modul ini: sebuah kernel bernama <code>analitika-perkotaan</code> ternyata menjalankan Python lain dengan versi Pandas yang lebih tua, dan akibatnya baru ketahuan setelah keluaran notebook dipenuhi peringatan yang tidak semestinya ada. Satu baris <code>print(sys.executable)</code> di awal akan menghemat berjam-jam penelusuran.</p>
+</div>
+</div>
+<ol start="4" type="1">
+<li>Ketik perintah berikut di sel kedua, lalu jalankan:</li>
+</ol>
+<div id="d320a304" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-07-15T08:59:51.331091Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-07-15T08:59:51.331091Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-07-15T08:59:51.335381Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-07-15T08:59:51.335381Z&quot;}}" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Buku lapangan siap!"</span>)</span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Buku lapangan siap!</code></pre>
+</div>
+</div>
+<p>Jika tulisan di atas muncul di bawah sel Anda, seluruh meja kerja digital kita sudah beres: direktori proyek tertata, <em>environment</em> terpasang, terminal sudah bisa diajak bicara, dan buku lapangan tersambung ke mesinnya. Bagaimana sel-sel notebook ini sesungguhnya bekerja — dan mengapa perilakunya berlawanan dengan dua berkas <code>.py</code> tadi — sengaja kita simpan sebagai pembuka Modul 2.</p>
+</section>
+</section>
+<section id="latihan-mandiri" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="latihan-mandiri"><span class="header-section-number">1.4</span> Latihan Mandiri</h2>
+<p>Kerjakan berurutan — alurnya sama persis dengan instruksi yang baru kita lalui. Simpan semua berkasnya, karena akan diperiksa di awal pertemuan berikutnya.</p>
+<ol type="1">
+<li><p><strong>Menulis skrip.</strong> Buat berkas baru <code>skrip/identitas.py</code> yang mendefinisikan <strong>tiga variabel</strong>: <code>nama</code> (string), <code>nim</code> (angka), dan <code>kelas_studio</code> (string), lalu menampilkan ketiganya ke terminal dalam <strong>satu kalimat utuh</strong> menggunakan <code>print()</code> dan f-string: “Izin memperkenalkan diri, saya &lt;nama&gt;, NIM &lt;nim&gt;, dari kelas studio &lt;kelas_studio&gt;. Mohon kerja samanya, ya!”</p></li>
+<li><p><strong>Menjalankan dari terminal.</strong> Jalankan skrip tersebut dari terminal yang berdiri di direktori proyek. Tuliskan (di komentar paling bawah berkas, diawali tanda <code>#</code>) perintah apa yang Anda pakai.</p></li>
+<li><p><strong>Memproduksi tiga kegagalan.</strong> Rusak skrip Anda secara sengaja, <strong>satu kesalahan pada satu waktu</strong> (perbaiki dulu sebelum membuat kesalahan berikutnya), sehingga ketiga <em>error</em> yang kita kenal muncul semua:</p>
+<ol type="a">
+<li><p>Hapus satu tanda kutip penutup → jalankan → amati <strong><code>SyntaxError</code></strong>.</p></li>
+<li><p>Salah-ketikkan nama variabel di dalam <code>print()</code> → jalankan → amati <strong><code>NameError</code></strong>.</p></li>
+<li><p>Ganti f-string dengan penyambungan langsung <code>"NIM saya " + nim</code> → jalankan → amati <strong><code>TypeError</code></strong>.</p></li>
+</ol>
+<p>Untuk setiap kegagalan, catat di komentar: apa <strong>nama</strong> <em>error</em>-nya dan apa <strong>baris terakhir</strong> pesannya. Setelah selesai, kembalikan skrip ke kondisi benar.</p></li>
+<li><p><strong>Menutup di buku lapangan.</strong> Buka <code>modul/buku-lapangan.ipynb</code>, pastikan kernel <code>analitika-perkotaan</code> tersambung, lalu buat sel yang menampilkan kalimat identitas yang sama seperti langkah 1. Anda akan sadar harus <strong>mendefinisikan ulang</strong> ketiga variabelnya di dalam notebook — jelaskan dalam satu kalimat (di sel teks/markdown) mengapa variabel dari <code>identitas.py</code> tidak bisa langsung dipakai di sini.</p></li>
+<li><p><strong>Membuktikan ruang kerja.</strong> Dengan papan nama <code>(analitika-perkotaan)</code> menyala, jalankan lagi ketiga perintah pembuktian dari langkah kelima:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">where.exe</span> python</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import sys; print(sys.prefix)"</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import sys; print(sys.path)"</span></span></code></pre></div><button title="Salin ke Papan Klip" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Tempelkan ketiga keluarannya sebagai komentar (diawali tanda <code>#</code>) di bagian paling bawah <code>skrip/identitas.py</code>. Lalu tuliskan, masih sebagai komentar, satu kalimat yang menjawab: <strong>“Python mana yang sesungguhnya menjalankan kode saya, dan dari mana saya tahu?”</strong> Sebutkan pula apakah ruang kerja Anda memenuhi ketiga syarat lulus atau tidak — jika tidak, sebutkan syarat nomor berapa yang gagal. Ini bukan sekadar anjuran: ruang kerja yang tidak terbukti akan menyulitkan Anda di setiap modul setelah ini.</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Disalin!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Disalin!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="Kata Pengantar">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Kata Pengantar</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./modul-02.html" class="pagination-link" aria-label="Pengolahan Data Terstruktur dengan Pandas">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Pengolahan Data Terstruktur dengan Pandas</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

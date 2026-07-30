@@ -1,0 +1,70 @@
+# Environment Conda mata kuliah Analitika Perkotaan (PL25-41003)
+# Pasang dengan:  conda env create -f environment.yml
+# Perbarui dengan: conda env update -n analitika-perkotaan -f environment.yml
+#
+# Resep ini dibekukan 30 Juli 2026 setelah terbukti membangun environment dari
+# nol di dua mesin berbeda (PC SYUKUR 29 Juli, laptop LAPTOP-LBPG20U6 30 Juli).
+#
+# channels sengaja hanya conda-forge, ditutup 'nodefaults'. Campuran dua toko
+# (defaults + conda-forge) adalah yang merusak env PC pada 29 Juli: libffi
+# conda-forge menyediakan ffi-8.dll sedangkan Python buatan Anaconda mencari
+# ffi.dll, dan seluruh ctypes mati.
+
+name: analitika-perkotaan
+
+channels:
+  - conda-forge
+  - nodefaults
+
+dependencies:
+  # --- Dasar: Modul 2-4 (sqlite3 sudah bawaan Python, tidak perlu dipasang)
+  - python=3.12
+  - pandas
+  - openpyxl
+
+  # --- Visual: Modul 5
+  # matplotlib-base, BUKAN matplotlib. Nama tanpa akhiran adalah paket payung
+  # yang ikut menyeret pyside6 + qt6 (~85 MB) untuk jendela grafik terpisah,
+  # padahal grafik kita tampil di dalam notebook.
+  - matplotlib-base
+  - seaborn
+
+  # --- Spasial: Modul 6-7
+  - geopandas
+  - leafmap
+  - mapclassify
+  - folium
+  - contextily
+
+  # --- Penarikan data: Modul 9
+  - requests
+  - beautifulsoup4
+  - osmnx
+
+  # --- Pemodelan: Modul 10
+  - scikit-learn
+
+  # --- Dashboard: Tugas Besar Pekan 11-16 & UAS
+  - streamlit
+  - streamlit-folium
+
+  # --- Infrastruktur: agar notebook jalan dan Quarto sanggup merender dari
+  # dalam environment. jupyterlab + notebook disebut apa adanya, bukan lewat
+  # paket payung 'jupyter'.
+  - ipykernel
+  - jupyterlab
+  - notebook
+  - nbformat
+  - nbclient
+  - pyyaml
+
+  # --- Bantu: penyiapan dataset PODES dan tabel interaktif di buku HTML
+  - dbfread
+  - itables
+
+# Saklar rak titipan bersama. Tanpa baris ini, paket di
+# %APPDATA%\Python\Python312\site-packages mendahului isi environment dan
+# hasil notebook tidak dapat direproduksi. Berlingkup environment ini saja;
+# Python lain di komputer tidak terpengaruh.
+variables:
+  PYTHONNOUSERSITE: "1"

@@ -1,0 +1,56 @@
+# ---------------------------------------------------------------------------
+# Keluaran antara dan cache Quarto
+# ---------------------------------------------------------------------------
+# Pola di bawah ini bertambat akar (diawali "/") dengan sengaja. Tanpa
+# penambat itu, pola yang sama akan ikut mengenai isi docs/ yang justru
+# harus terlacak karena dipakai GitHub Pages.
+
+# Cache render, termasuk unduhan font dari fonts.gstatic.com. Terbentuk
+# sendiri saat "quarto render".
+/.quarto/
+
+# Residu render lama dari sebelum output-dir dialihkan ke docs/. Yang dipakai
+# Pages adalah docs/site_libs/ -- karena itu pola ini WAJIB bertambat akar,
+# jangan ditulis "site_libs/" saja.
+/site_libs/
+
+# Keluaran keep-typ dari format Typst. Bertambat akar dan bernama lengkap,
+# jangan ditulis "*.typ" -- pola itu akan membuang typst/typst-template.typ,
+# typst/typst-show.typ, dan typst/page.typ yang justru dibutuhkan saat render.
+/index.typ
+
+# Direktori sisipan Quarto di akar (mis. modul-05_files) bila render dijalankan
+# tanpa output-dir. Padanannya di docs/ tetap terlacak.
+/*_files/
+
+# ---------------------------------------------------------------------------
+# Dataset praktikum
+# ---------------------------------------------------------------------------
+# Tidak diterbitkan di repo ini. Dosen membagikannya lewat kanal kelas, dan
+# Modul 1 memang menuntun mahasiswa menyalin foldernya sendiri.
+/dataset-ganjil-2026-2027/
+/dataset/
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# Berkas rahasia (kunci API dan sejenisnya)
+.env
+
+# ---------------------------------------------------------------------------
+# Penyunting dan sistem operasi
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+.obsidian/
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.DS_Store

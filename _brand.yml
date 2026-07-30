@@ -1,0 +1,14 @@
+typography:
+  fonts:
+    - family: Carlito
+      source: google
+      weight: [400, 700]
+    - family: Playfair Display
+      source: google
+      weight: [400, 700]
+    - family: JetBrains Mono
+      source: google
+      weight: [400, 700]
+  base: Carlito
+  headings: Playfair Display
+  monospace: JetBrains Mono

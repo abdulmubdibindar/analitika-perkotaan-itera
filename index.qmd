@@ -1,0 +1,33 @@
+# Kata Pengantar {.unnumbered}
+
+[\<masukkan kata pengantar dari tim dosen di sini\>]{.teks-placeholder style="color: #8a8a8a;"}
+
+Modul praktikum ini menemani perkuliahan **Analitika Perkotaan (PL25-41003)** di Program Studi Perencanaan Wilayah dan Kota, Institut Teknologi Sumatera. Setiap modul dirancang untuk satu pertemuan praktikum (150 menit) dan mengikuti satu kasus besar yang sama: **Kota Bandar Lampung**.
+
+## Cara Memakai Modul Ini {.unnumbered}
+
+Setiap modul memiliki susunan yang sama sehingga ritme belajar Anda terjaga dari pekan ke pekan:
+
+1. **Sub-CPMK** — kemampuan yang menjadi target pertemuan tersebut.
+
+2. **Pendahuluan** — mengapa kemampuan ini penting bagi seorang perencana.
+
+3. **Gambaran Umum Kasus** — cerita kasus perkotaan yang akan kita kerjakan.
+
+4. **Instruksi** — langkah-langkah praktik yang Anda ikuti dan ketik sendiri di kelas.
+
+5. **Latihan Mandiri** — tugas dengan alur yang sama persis seperti Instruksi, tetapi memakai kolom data yang berbeda. Inilah cara Anda menguji pemahaman tanpa bimbingan.
+
+Sepanjang modul, Anda akan menemui kotak **callout** seperti ini:
+
+::: {.callout-note title="Konsep Python: Contoh Callout"}
+Kotak seperti ini muncul **tepat setelah** sebuah konsep Python dipakai untuk pertama kalinya di dalam instruksi. Isinya penjelasan konsep tersebut, untuk Anda baca ulang secara mandiri di luar kelas. Saat praktikum, Anda tidak perlu berhenti lama di sini.
+:::
+
+## Dataset {.unnumbered}
+
+Seluruh praktikum memakai dataset yang dibagikan dosen dalam folder `dataset-ganjil-2026-2027`. Sumber utamanya adalah data **PODES 2021** (BPS) untuk Kota Bandar Lampung dan Kota Metro, serta data satuan pendidikan dari Kemendikdasmen. Kami berterima kasih kepada **Prof. Ibnu Syabri, B.Sc., M.Sc., Ph.D.** atas penyediaan dataset PODES 2021 untuk pembelajaran praktikum ini. Cara menata folder dataset ini di komputer Anda dijelaskan pada Modul 1.
+
+## Perangkat Lunak {.unnumbered}
+
+Praktikum memakai perangkat lunak yang seluruhnya gratis: **Miniconda** (pengelola lingkungan Python), **Visual Studio Code** (penyunting kode), dan sejumlah *library* Python yang akan dipasang bertahap sesuai kebutuhan tiap modul. Semua langkah penyiapannya dituntun pada Modul 1.

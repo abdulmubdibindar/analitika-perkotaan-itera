@@ -65,3 +65,16 @@ Keluarannya masuk ke `docs/`, yang dilayani GitHub Pages dari branch `main`. Ber
 1 sudah menuntun mahasiswa menata foldernya sendiri di komputer masing-masing.
 
 Sumber data: PODES 2021 (BPS) untuk Kota Bandar Lampung dan Kota Metro, serta data satuan pendidikan dari Kemendikdasmen. Dataset PODES 2021 disediakan oleh Prof. Ibnu Syabri, B.Sc., M.Sc., Ph.D.
+
+## Aturan Git Commit
+
+Ketika merencanakan atau melakukan commit di repositori ini, selalu ikuti ketentuan berikut:
+1. **Atomic Commits (Pemisahan Logis)**:
+   - Pisahkan perubahan dependensi/lingkungan (`environment.yml`).
+   - Pisahkan penambahan atau pembaruan materi praktikum (`modul-*.ipynb`) per modul beserta aset gambar khusus yang direferensikannya.
+   - Pisahkan aset umum dan dokumen administrasi buku (`assets/`).
+   - Pisahkan hasil kompilasi publikasi dan distribusi Moodle (`docs/`) dari berkas kode sumber.
+2. **Gaya Pesan Commit**:
+   - Tulis dalam **Bahasa Indonesia yang lugas, alami, dan mudah dipahami**.
+   - **Jangan gunakan prefiks atau kata kunci Conventional Commits** (seperti `feat:`, `chore:`, `build:`, `docs:`).
+   - Gunakan kalimat aktif/imperatif yang jelas (misalnya: *Tambahkan Modul 06...*, *Perbarui dependensi...*, *Perbarui hasil render web...*).

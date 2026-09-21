@@ -36,10 +36,14 @@ dependencies:
   - folium
   - contextily
 
-  # --- Penarikan data: Modul 9
+  # --- Penarikan data: Modul 9 (Agentic Data Harvesting & OpenStreetMap)
   - requests
   - beautifulsoup4
   - osmnx
+  - nodejs>=20
+  - pip
+  - pip:
+      - browser-act-cli
 
   # --- Pemodelan: Modul 10
   - scikit-learn
